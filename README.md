@@ -1,8 +1,19 @@
 # URL Shortener
 
-A production-oriented URL Shortener built using React, Node.js, Express, MongoDB, and Redis.
+A production-oriented URL shortening platform built with React, Node.js, Express, MongoDB, and Redis.
 
-The system allows users to generate short URLs, redirect users to original URLs, track analytics, and manage URLs through a dashboard.
+The application enables users to create short URLs, manage links, track click analytics, generate QR codes, and monitor traffic through a centralized dashboard. The system is designed with scalability, maintainability, and production deployment in mind.
+
+---
+
+## Objectives
+
+- Generate short and unique URLs
+- Redirect users with minimal latency
+- Track click analytics and user behavior
+- Support custom aliases and link expiration
+- Scale efficiently under high traffic
+- Follow clean architecture principles
 
 ---
 
@@ -10,47 +21,48 @@ The system allows users to generate short URLs, redirect users to original URLs,
 
 ## Core Features
 
-- Create Short URL
-- Redirect to Original URL
-- Custom Alias Support
-- URL Expiration
-- URL Management Dashboard
-- Click Tracking
-- Analytics
-
-## Advanced Features
-
-- User Authentication
-- QR Code Generation
-- Redis Caching
-- Rate Limiting
-- Geo Analytics
-- Device Analytics
-- Browser Analytics
-- Docker Support
-- CI/CD Pipeline
+| Feature             | Description                                 |
+| ------------------- | ------------------------------------------- |
+| URL Shortening      | Convert long URLs into compact short links  |
+| URL Redirection     | Redirect users to original destinations     |
+| Custom Aliases      | Allow users to choose their own short codes |
+| URL Expiration      | Expire links after a configurable date      |
+| Link Management     | Create, edit, delete, and manage URLs       |
+| Click Tracking      | Track total link visits                     |
+| Analytics Dashboard | View detailed statistics                    |
 
 ---
 
-# High Level Architecture
+## Advanced Features
 
-Frontend (React)
+| Feature            | Description                        |
+| ------------------ | ---------------------------------- |
+| Authentication     | JWT-based authentication           |
+| QR Code Generation | Generate QR codes for links        |
+| Redis Caching      | Cache frequently accessed URLs     |
+| Rate Limiting      | Prevent abuse and bot traffic      |
+| Device Analytics   | Track device information           |
+| Browser Analytics  | Track browser usage                |
+| Geo Analytics      | Track country and city information |
+| Docker Support     | Containerized deployment           |
+| CI/CD Pipeline     | Automated testing and deployment   |
 
-↓
+---
 
-API Gateway (Express)
+# High-Level Architecture
 
-↓
+```mermaid
+flowchart TD
 
-Application Layer
+A[React Frontend]
+    --> B[Express API Server]
 
-↓
+B --> C[Application Layer]
 
-MongoDB
+C --> D[(MongoDB)]
 
-↓
-
-Redis Cache
+C --> E[(Redis Cache)]
+```
 
 ---
 
@@ -58,181 +70,145 @@ Redis Cache
 
 ## URL Creation Flow
 
-User enters URL
+```mermaid
+flowchart TD
 
-↓
+A[User Submits URL]
+    --> B[Frontend Validation]
 
-Frontend sends request
+B --> C[POST /api/urls]
 
-↓
+C --> D[Backend Validation]
 
-Backend validates URL
+D --> E[Generate Short Code]
 
-↓
+E --> F[Store URL in MongoDB]
 
-Generate unique shortcode
-
-↓
-
-Store in Database
-
-↓
-
-Return shortened URL
+F --> G[Return Short URL]
+```
 
 ---
 
-## URL Redirect Flow
+## URL Redirection Flow
 
-User visits short URL
+```mermaid
+flowchart TD
 
-↓
+A[User Visits Short URL]
+    --> B[Extract Short Code]
 
-Backend receives shortcode
+B --> C[Check Redis Cache]
 
-↓
+C -->|Hit| D[Redirect User]
 
-Check Redis Cache
+C -->|Miss| E[Query MongoDB]
 
-↓
+E --> F[Increment Click Count]
 
-If found
+F --> G[Update Cache]
 
-    Redirect immediately
-
-Else
-
-    Query MongoDB
-
-↓
-
-Increment Click Count
-
-↓
-
-Store in Cache
-
-↓
-
-Redirect User
+G --> D
+```
 
 ---
 
-## Analytics Flow
+## Analytics Collection Flow
 
-User clicks short URL
+```mermaid
+flowchart TD
 
-↓
+A[User Clicks Link]
+    --> B[Capture Request Metadata]
 
-Capture
+B --> C[Browser]
 
-- IP Address
-- Browser
-- Device
-- Country
-- Referrer
+B --> D[Device]
 
-↓
+B --> E[Country]
 
-Store Analytics Event
+B --> F[Referrer]
 
-↓
+C --> G[Analytics Service]
+D --> G
+E --> G
+F --> G
 
-Update Aggregated Statistics
+G --> H[(Analytics Collection)]
+```
 
 ---
 
-# Folder Structure
+# Project Structure
 
-## Root
-
-project/
-
+```text
+url-shortener/
+│
 ├── backend/
-
 ├── frontend/
-
 ├── docs/
-
 ├── docker/
-
 ├── .github/
-
+│
+├── docker-compose.yml
 ├── README.md
-
-└── docker-compose.yml
+└── .gitignore
+```
 
 ---
 
-# Backend Structure
+# Backend Architecture
 
+```text
 backend/
-
-src/
-
-├── config/
-
-├── controllers/
-
-├── services/
-
-├── repositories/
-
-├── routes/
-
-├── middlewares/
-
-├── models/
-
-├── validators/
-
-├── utils/
-
-├── jobs/
-
-├── cache/
-
-├── constants/
-
-├── docs/
-
-├── app.js
-
-└── server.js
+│
+├── src/
+│   ├── config/
+│   ├── controllers/
+│   ├── services/
+│   ├── repositories/
+│   ├── routes/
+│   ├── middlewares/
+│   ├── validators/
+│   ├── models/
+│   ├── cache/
+│   ├── jobs/
+│   ├── utils/
+│   ├── constants/
+│   │
+│   ├── app.js
+│   └── server.js
+│
+├── tests/
+├── package.json
+└── .env
+```
 
 ---
 
-# Frontend Structure
+# Frontend Architecture
 
+```text
 frontend/
-
-src/
-
-├── api/
-
-├── pages/
-
-├── components/
-
-├── layouts/
-
-├── hooks/
-
-├── store/
-
-├── services/
-
-├── routes/
-
-├── utils/
-
-├── constants/
-
-├── styles/
-
-├── App.jsx
-
-└── main.jsx
+│
+├── src/
+│   ├── api/
+│   ├── components/
+│   ├── pages/
+│   ├── layouts/
+│   ├── hooks/
+│   ├── services/
+│   ├── routes/
+│   ├── store/
+│   ├── utils/
+│   ├── constants/
+│   ├── styles/
+│   │
+│   ├── App.jsx
+│   └── main.jsx
+│
+├── public/
+└── package.json
+```
 
 ---
 
@@ -240,44 +216,50 @@ src/
 
 ## Users Collection
 
+```json
 {
-"\_id": "",
-"name": "",
-"email": "",
-"password": "",
-"createdAt": ""
+  "_id": "ObjectId",
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "hashed_password",
+  "createdAt": "Date"
 }
+```
 
 ---
 
 ## URLs Collection
 
+```json
 {
-"\_id": "",
-"userId": "",
-"originalUrl": "",
-"shortCode": "",
-"customAlias": "",
-"expiresAt": "",
-"clickCount": 0,
-"createdAt": ""
+  "_id": "ObjectId",
+  "userId": "ObjectId",
+  "originalUrl": "https://example.com",
+  "shortCode": "abc123",
+  "customAlias": null,
+  "expiresAt": null,
+  "clickCount": 0,
+  "createdAt": "Date"
 }
+```
 
 ---
 
 ## Analytics Collection
 
+```json
 {
-"\_id": "",
-"urlId": "",
-"country": "",
-"city": "",
-"browser": "",
-"device": "",
-"os": "",
-"referrer": "",
-"timestamp": ""
+  "_id": "ObjectId",
+  "urlId": "ObjectId",
+  "country": "India",
+  "city": "Delhi",
+  "browser": "Chrome",
+  "device": "Desktop",
+  "os": "Windows",
+  "referrer": "Google",
+  "timestamp": "Date"
 }
+```
 
 ---
 
@@ -285,106 +267,105 @@ src/
 
 ## Authentication
 
-POST /api/auth/register
-
-POST /api/auth/login
-
-GET /api/auth/profile
-
----
-
-## URL APIs
-
-POST /api/urls
-
-GET /api/urls
-
-GET /api/urls/:id
-
-PUT /api/urls/:id
-
-DELETE /api/urls/:id
+| Method | Endpoint             |
+| ------ | -------------------- |
+| POST   | `/api/auth/register` |
+| POST   | `/api/auth/login`    |
+| GET    | `/api/auth/profile`  |
 
 ---
 
-## Analytics APIs
+## URL Management
 
-GET /api/analytics/:urlId
-
-GET /api/analytics/dashboard
-
----
-
-## Redirect API
-
-GET /:shortCode
+| Method | Endpoint        |
+| ------ | --------------- |
+| POST   | `/api/urls`     |
+| GET    | `/api/urls`     |
+| GET    | `/api/urls/:id` |
+| PUT    | `/api/urls/:id` |
+| DELETE | `/api/urls/:id` |
 
 ---
 
-# Backend Layers
+## Analytics
 
-Controller Layer
-
-Responsible for handling requests.
-
-↓
-
-Service Layer
-
-Business Logic.
-
-↓
-
-Repository Layer
-
-Database Interaction.
-
-↓
-
-MongoDB
-
-Persistent Storage.
+| Method | Endpoint                   |
+| ------ | -------------------------- |
+| GET    | `/api/analytics/:urlId`    |
+| GET    | `/api/analytics/dashboard` |
 
 ---
 
-# Redis Usage
+## Redirect
 
-## Cached Data
+| Method | Endpoint      |
+| ------ | ------------- |
+| GET    | `/:shortCode` |
 
-ShortCode → Original URL
+---
 
-Example
+# Layered Backend Architecture
 
+```mermaid
+flowchart TD
+
+A[Routes]
+    --> B[Controllers]
+
+B --> C[Services]
+
+C --> D[Repositories]
+
+D --> E[(MongoDB)]
+```
+
+---
+
+# Redis Caching Strategy
+
+## Cache Structure
+
+```json
 {
-"abc123": "https://google.com"
+  "abc123": {
+    "originalUrl": "https://google.com"
+  }
 }
+```
+
+### Benefits
+
+- Faster redirects
+- Reduced database queries
+- Improved scalability
+- Better response times
 
 ---
 
-# Security
+# Security Considerations
 
-## Implement
-
-- Helmet
-- CORS
-- Rate Limiting
-- JWT Authentication
-- Password Hashing
-- Input Validation
-- XSS Protection
-- CSRF Protection
+| Security Layer   | Implementation     |
+| ---------------- | ------------------ |
+| Authentication   | JWT                |
+| Password Storage | bcrypt             |
+| Input Validation | Zod                |
+| Rate Limiting    | express-rate-limit |
+| HTTP Security    | Helmet             |
+| CORS             | Controlled Origins |
+| XSS Protection   | Sanitization       |
+| CSRF Protection  | Tokens             |
 
 ---
 
 # Frontend Pages
 
-## Public
+## Public Pages
 
 - Home
 - Login
 - Register
 
-## Protected
+## Protected Pages
 
 - Dashboard
 - Analytics
@@ -393,28 +374,15 @@ Example
 
 ---
 
-# State Management
-
-Recommended:
-
-- React Query
-- Context API
-
-or
-
-- Redux Toolkit
-
----
-
-# Tech Stack
+# Technology Stack
 
 ## Frontend
 
 - React
 - Vite
-- TailwindCSS
+- Tailwind CSS
 - Axios
-- React Query
+- TanStack Query
 
 ## Backend
 
@@ -429,107 +397,108 @@ or
 ## DevOps
 
 - Docker
-- GitHub Actions
 - Nginx
+- GitHub Actions
 
 ---
 
 # Scalability Considerations
 
-## Challenges
-
-### URL Collision
+## URL Collision
 
 Solution:
 
 - NanoID
-- Unique Index
+- Database unique indexes
 
-### High Traffic Redirects
-
-Solution:
-
-- Redis Cache
-
-### Analytics Growth
+## High Traffic Redirects
 
 Solution:
 
-- Separate Analytics Collection
+- Redis caching layer
 
-### Database Load
+## Analytics Growth
 
 Solution:
 
-- Read Replicas
+- Dedicated analytics collection
+- Aggregated reporting
+
+## Database Scaling
+
+Solution:
+
+- Read replicas
+- Horizontal scaling
 
 ---
 
-# Deployment Architecture
+# Production Deployment Architecture
 
-Client
+```mermaid
+flowchart TD
 
-↓
+A[Client]
+    --> B[Nginx]
 
-Nginx
+B --> C[React Application]
 
-↓
+B --> D[Express API]
 
-Backend API
+D --> E[(Redis)]
 
-↓
-
-Redis
-
-↓
-
-MongoDB
+D --> F[(MongoDB)]
+```
 
 ---
 
 # Future Enhancements
 
 - Team Workspaces
-- URL Password Protection
-- Link Scheduling
-- Deep Link Support
+- Password Protected Links
+- Scheduled Publishing
 - UTM Builder
 - Bulk URL Import
-- Public Analytics
-- Graph Dashboard
+- Public Analytics Sharing
+- Deep Linking Support
 - Event Streaming with Kafka
+- Multi-Tenant Architecture
 
 ---
 
-# Development Phases
+# Development Roadmap
 
-Phase 1
+## Phase 1
 
 - URL Shortening
-- Redirects
-- CRUD APIs
+- URL Redirection
+- CRUD Operations
 
-Phase 2
+## Phase 2
 
 - Authentication
 - Dashboard
 
-Phase 3
+## Phase 3
 
 - Analytics
 
-Phase 4
+## Phase 4
 
-- Redis Caching
+- Redis Integration
 
-Phase 5
+## Phase 5
 
-- Docker Deployment
+- Dockerization
 
-Phase 6
+## Phase 6
 
-- CI/CD
+- CI/CD Pipeline
 
-Phase 7
+## Phase 7
 
-- Scalability Improvements
+- Horizontal Scaling & Performance Optimization
+
+```
+
+```
