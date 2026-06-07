@@ -220,7 +220,7 @@ backend/
 │   │   ├── auth.routes.js
 │   │   ├── url.routes.js
 │   │   ├── analytics.routes.js
-│   │   └── redirect.routes.js  # /:shortCode — kept separate for performance
+│   │   └── redirect.routes.js  # /:shortCode, kept separate for performance
 │   │
 │   ├── middlewares/
 │   │   ├── auth.middleware.js
@@ -237,15 +237,24 @@ backend/
 │   │   ├── deleteExpiredUrls.job.js        # Cron: purge expired links
 │   │   └── analyticsAggregation.job.js     # Cron: aggregate click stats
 │   │
-│   └── utils/
-│       ├── generateShortCode.js  # NanoID with collision retry
-│       ├── extractDeviceInfo.js
-│       ├── geoLocation.js
-│       └── logger.js
+│   ├── utils/
+│   │   ├── generateShortCode.js  # Short code generation
+│   │   ├── extractDeviceInfo.js
+│   │   ├── geoLocation.js
+│   │   └── logger.js
+│   │
+│   ├── constants/
+│   ├── app.js
+│   └── server.js
 │
-└── tests/
-    ├── integration/
-    └── unit/
+├── tests/
+│   ├── integration/
+│   └── unit/
+│
+├── .env.example
+├── .gitignore
+├── package-lock.json
+└── package.json
 ```
 
 ### Frontend
@@ -258,8 +267,8 @@ frontend/
 ├── src/
 │   │
 │   ├── api/
-│   │   ├── axios.js
-│   │   └── queryClient.js
+│   │   ├── axios.ts
+│   │   └── queryClient.ts
 │   │
 │   ├── assets/
 │   │   ├── images/
@@ -282,40 +291,47 @@ frontend/
 │   │   └── NotFound/
 │   │
 │   ├── hooks/
-│   │   ├── useAuth.js
-│   │   ├── useUrls.js
-│   │   └── useAnalytics.js
+│   │   ├── useAuth.ts
+│   │   ├── useUrls.ts
+│   │   └── useAnalytics.ts
 │   │
 │   ├── services/
-│   │   ├── auth.service.js
-│   │   ├── url.service.js
-│   │   └── analytics.service.js
+│   │   ├── auth.service.ts
+│   │   ├── url.service.ts
+│   │   └── analytics.service.ts
 │   │
 │   ├── routes/
-│   │   ├── AppRoutes.jsx
-│   │   ├── ProtectedRoute.jsx
-│   │   └── PublicRoute.jsx
+│   │   ├── AppRoutes.tsx
+│   │   ├── ProtectedRoute.tsx
+│   │   └── PublicRoute.tsx
 │   │
 │   ├── context/
-│   │   └── AuthContext.jsx
+│   │   └── AuthContext.tsx
 │   │
 │   ├── utils/
-│   │   ├── copyToClipboard.js
-│   │   ├── formatDate.js
-│   │   └── generateQrCode.js
+│   │   ├── copyToClipboard.ts
+│   │   ├── formatDate.ts
+│   │   └── generateQrCode.ts
 │   │
 │   ├── constants/
-│   │   ├── api.js
-│   │   └── routes.js
+│   │   ├── api.ts
+│   │   └── routes.ts
 │   │
 │   ├── styles/
+│   │   └── index.css
 │   │
-│   ├── App.jsx
-│   └── main.jsx
+│   ├── App.tsx
+│   └── main.tsx
 │
-├── .env
+├── .env.example
+├── .gitignore
+├── index.html
+├── package-lock.json
 ├── package.json
-├── vite.config.js
+├── tsconfig.json
+├── tsconfig.app.json
+├── tsconfig.node.json
+├── vite.config.ts
 └── README.md
 ```
 
