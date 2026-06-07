@@ -1,6 +1,6 @@
-const crypto = require("crypto");
+import crypto from "crypto";
 
 const generateShortCode = (length = 7) =>
   crypto.randomBytes(length).toString("base64url").slice(0, length);
 
-module.exports = generateShortCode;
+export default generateShortCode;

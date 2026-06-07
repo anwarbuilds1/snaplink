@@ -1,3 +1,3 @@
 const deleteExpiredUrlsJob = async () => {};
 
-module.exports = deleteExpiredUrlsJob;
+export default deleteExpiredUrlsJob;

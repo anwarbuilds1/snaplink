@@ -3,4 +3,4 @@ const logger = {
   error: console.error,
 };
 
-module.exports = logger;
+export default logger;

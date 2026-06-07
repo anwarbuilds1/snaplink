@@ -1,3 +1,3 @@
 const geoLocation = () => null;
 
-module.exports = geoLocation;
+export default geoLocation;

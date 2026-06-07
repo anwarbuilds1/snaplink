@@ -1,13 +1,11 @@
-require("dotenv").config();
+import "dotenv/config";
 
-const env = {
-  port: process.env.PORT || "5000",
-  mongoUri: process.env.MONGO_URI,
-  redisUrl: process.env.REDIS_URL,
-  jwtSecret: process.env.JWT_SECRET,
-  jwtExpiresIn: process.env.JWT_EXPIRES_IN || "7d",
-  baseUrl: process.env.BASE_URL || "http://localhost:5000",
-  nodeEnv: process.env.NODE_ENV || "development",
+export const env = {
+  PORT: process.env.PORT || "5000",
+  MONGODB_URI: process.env.MONGODB_URI,
+  REDIS_URL: process.env.REDIS_URL,
+  JWT_SECRET: process.env.JWT_SECRET,
+  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || "7d",
+  BASE_URL: process.env.BASE_URL || "http://localhost:5000",
+  NODE_ENV: process.env.NODE_ENV || "development",
 };
-
-module.exports = env;

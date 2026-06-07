@@ -1,4 +1,4 @@
-const { createClient } = require("redis");
+import { createClient } from "redis";
 
 const createRedisClient = (redisUrl) => {
   if (!redisUrl) {
@@ -8,4 +8,4 @@ const createRedisClient = (redisUrl) => {
   return createClient({ url: redisUrl });
 };
 
-module.exports = createRedisClient;
+export default createRedisClient;

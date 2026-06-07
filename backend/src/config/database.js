@@ -1,11 +1,19 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+import { env } from "./env.js";
 
-const connectDatabase = async (mongoUri) => {
-  if (!mongoUri) {
-    throw new Error("MONGO_URI is required");
+export const connectDB = async () => {
+  if (!env.MONGODB_URI) {
+    throw new Error("MONGODB_URI is not set");
   }
 
-  return mongoose.connect(mongoUri);
-};
+  try {
+    await mongoose.connect(env.MONGODB_URI);
 
-module.exports = connectDatabase;
+    console.log("MongoDB Connected");
+  } catch (error) {
+    console.error("Database Connection Failed");
+    console.error(error.message);
+
+    process.exit(1);
+  }
+};
