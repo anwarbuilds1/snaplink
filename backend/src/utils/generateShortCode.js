@@ -1,6 +1,5 @@
-import crypto from "crypto";
+import { nanoid } from "nanoid";
 
-const generateShortCode = (length = 7) =>
-  crypto.randomBytes(length).toString("base64url").slice(0, length);
-
-export default generateShortCode;
+export const generateShortCode = () => {
+  return nanoid(7);
+};
