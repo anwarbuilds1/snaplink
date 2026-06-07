@@ -9,7 +9,7 @@ const urlSchema = new mongoose.Schema(
     },
     shortCode: {
       type: String,
-      require: true,
+      required: true,
       unique: true,
       index: true,
     },
