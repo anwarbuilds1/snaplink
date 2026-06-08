@@ -4,9 +4,9 @@ import helmet from "helmet";
 import morgan from "morgan";
 
 import healthRoutes from "./routes/health.routes.js";
-
 import urlRoute from "./routes/url.routes.js";
 import redirectRoutes from "./routes/redirect.routes.js";
+import errorHandler from "./middlewares/error.middleware.js";
 
 const app = express();
 
@@ -25,5 +25,7 @@ app.use((req, res) => {
     message: "Route not found",
   });
 });
+
+app.use(errorHandler);
 
 export default app;
