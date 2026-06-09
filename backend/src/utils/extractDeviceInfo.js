@@ -1,5 +1,17 @@
-const extractDeviceInfo = (req) => ({
-  userAgent: req.get("user-agent") || "",
-});
+import { detect } from "detect-browser";
 
-export default extractDeviceInfo;
+export const extractDeviceInfo = (userAgent) => {
+  const result = detect(userAgent);
+
+  if (!result) {
+    return {
+      browser: "unknown",
+      os: "unknown",
+    };
+  }
+
+  return {
+    browser: result.name,
+    os: result.os,
+  };
+};

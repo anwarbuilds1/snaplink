@@ -2,22 +2,31 @@ import mongoose from "mongoose";
 
 const analyticsSchema = new mongoose.Schema(
   {
-    userId: {
+    urlId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Url",
       required: true,
+      index: true,
     },
-    browser: String,
-    os: String,
-    device: String,
-    country: String,
-    referrer: String,
+    browser: {
+      type: String,
+    },
+    os: {
+      type: String,
+    },
+    userAgent: {
+      type: String,
+    },
+    referrer: {
+      type: String,
+      default: "direct",
+    },
     clickedAt: {
       type: Date,
       default: Date.now,
     },
   },
-  { timestamps: true },
+  { versionKey: false },
 );
 
 const Analytics = mongoose.model("Analytics", analyticsSchema);

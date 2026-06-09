@@ -17,7 +17,7 @@ export const incrementClickCount = async (id) => {
       },
     },
     {
-      new: true,
+      returnDocument: "after",
     },
   );
 };
