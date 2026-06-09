@@ -14,6 +14,7 @@ export const getOriginalUrl = async (shortCode, req) => {
     console.log("CACHE HIT");
 
     const data = JSON.parse(cachedUrl);
+    await urlRepository.incrementClickCount(data.id);
 
     await analyticsService.trackClick(data.id, req);
 
