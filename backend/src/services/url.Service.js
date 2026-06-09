@@ -10,10 +10,10 @@ export const createShortUrl = async (originalUrl) => {
     shortCode,
   });
 
-  await setCache(`url:${shortCode}`, {
-    id: url._id.toString(),
-    originalUrl: url.originalUrl,
-  });
+  // await setCache(`url:${shortCode}`, {
+  //   id: url._id.toString(),
+  //   originalUrl: url.originalUrl,
+  // });
 
   return url;
 };
