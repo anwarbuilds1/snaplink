@@ -5,7 +5,7 @@ import AppError from "../utils/AppError.js";
 
 import { getCache, setCache } from "../cache/redisCache.js";
 
-export const getOriginalUrl = async (shortCode, req) => {
+export const getOriginalUrl = async (shortCode, clickContext) => {
   const cacheKey = `url:${shortCode}`;
 
   const cachedUrl = await getCache(cacheKey);
@@ -16,7 +16,7 @@ export const getOriginalUrl = async (shortCode, req) => {
     const data = JSON.parse(cachedUrl);
     await urlRepository.incrementClickCount(data.id);
 
-    await analyticsService.trackClick(data.id, req);
+    await analyticsService.trackClick(data.id, clickContext);
 
     return data.originalUrl;
   }
@@ -31,7 +31,7 @@ export const getOriginalUrl = async (shortCode, req) => {
 
   await urlRepository.incrementClickCount(url._id);
 
-  await analyticsService.trackClick(url._id, req);
+  await analyticsService.trackClick(url._id, clickContext);
 
   await setCache(cacheKey, {
     id: url._id.toString(),

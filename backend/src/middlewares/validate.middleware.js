@@ -1,6 +1,12 @@
-export const validate = (schema) => {
+const validatedRequestKeys = {
+  body: "validatedData",
+  params: "validatedParams",
+  query: "validatedQuery",
+};
+
+export const validate = (schema, source = "body") => {
   return (req, res, next) => {
-    const result = schema.safeParse(req.body);
+    const result = schema.safeParse(req[source]);
 
     if (!result.success) {
       return res.status(400).json({
@@ -10,7 +16,7 @@ export const validate = (schema) => {
       });
     }
 
-    req.validatedData = result.data;
+    req[validatedRequestKeys[source]] = result.data;
 
     next();
   };
