@@ -8,6 +8,7 @@ import urlRoute from "./routes/url.routes.js";
 import redirectRoutes from "./routes/redirect.routes.js";
 import errorHandler from "./middlewares/error.middleware.js";
 import analyticsRoutes from "./routes/analytics.routes.js";
+import authRoutes from "./routes/auth.routes.js";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(morgan("dev"));
 app.use("/health", healthRoutes);
 app.use("/api/v1/urls", urlRoute);
 app.use("/api/v1/analytics", analyticsRoutes);
+app.use("/api/v1/auth", authRoutes);
 app.use("/", redirectRoutes);
 
 app.use((req, res) => {

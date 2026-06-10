@@ -16,7 +16,7 @@ export const getAnalyticsByUrlId = async (urlId) => {
 export const getBrowserStats = async (urlId) => {
   const objectId = new mongoose.Types.ObjectId(urlId);
 
-  const result = await Analytics.aggregate([
+  return Analytics.aggregate([
     {
       $match: {
         urlId: objectId,
@@ -28,17 +28,18 @@ export const getBrowserStats = async (urlId) => {
         count: { $sum: 1 },
       },
     },
+    {
+      $sort: {
+        count: -1,
+      },
+    },
   ]);
-
-  console.log("Browser Stats:", result);
-
-  return result;
 };
 
 export const getOsStats = async (urlId) => {
   const objectId = new mongoose.Types.ObjectId(urlId);
 
-  const result = await Analytics.aggregate([
+  return Analytics.aggregate([
     {
       $match: {
         urlId: objectId,
@@ -50,9 +51,10 @@ export const getOsStats = async (urlId) => {
         count: { $sum: 1 },
       },
     },
+    {
+      $sort: {
+        count: -1,
+      },
+    },
   ]);
-
-  console.log("OS Stats:", result);
-
-  return result;
 };

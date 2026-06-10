@@ -7,3 +7,10 @@ export const createUrlSchema = z.object({
 export const shortCodeParamSchema = z.object({
   shortCode: z.string().trim().min(1, "Short code is required"),
 });
+
+export const urlIdParamSchema = z.object({
+  urlId: z
+    .string()
+    .trim()
+    .regex(/^[0-9a-fA-F]{24}$/, "Please provide a valid URL id"),
+});
