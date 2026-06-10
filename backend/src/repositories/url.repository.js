@@ -4,12 +4,25 @@ export const createUrl = async (data) => {
   return Url.create(data);
 };
 
+export const updateUrl = async (id, data) => {
+  return Url.findByIdAndUpdate(id, data, {
+    new: true,
+  });
+};
+
+export const deleteUrl = async (id) => {
+  return Url.findByIdAndDelete(id);
+};
+
 export const findByShortCode = async (shortCode) => {
   return Url.findOne({ shortCode, isActive: true });
 };
 
 export const findByUserId = async (userId) => {
   return Url.find({ userId }).sort({ createdAt: -1 });
+};
+export const findById = async (id) => {
+  return Url.findById(id);
 };
 
 export const incrementClickCount = async (id) => {
