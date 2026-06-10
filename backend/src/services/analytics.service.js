@@ -24,9 +24,6 @@ const formatStats = (stats) => {
 };
 
 export const getUrlAnalytics = async (urlId) => {
-  const docs = await analyticsRepository.getAnalyticsByUrlId(urlId);
-
-  console.log("Analytics Docs:", docs);
   const browserStats = await analyticsRepository.getBrowserStats(urlId);
 
   const osStats = await analyticsRepository.getOsStats(urlId);
@@ -41,12 +38,20 @@ export const getUrlAnalytics = async (urlId) => {
 };
 
 export const getDashboardStats = async () => {
-  const totalUrls = await urlRepository.getTotalUrls();
-
-  const totalClicks = await urlRepository.getTotalClicks();
+  const [totalUrls, totalClicks, topUrl] = await Promise.all([
+    urlRepository.getTotalUrls(),
+    urlRepository.getTotalClicks(),
+    urlRepository.getTopUrl(),
+  ]);
 
   return {
     totalUrls,
     totalClicks,
+    topUrl: topUrl
+      ? {
+          shortCode: topUrl.shortCode,
+          clicks: topUrl.clickCount,
+        }
+      : null,
   };
 };

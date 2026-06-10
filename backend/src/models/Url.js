@@ -7,6 +7,12 @@ const urlSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
     shortCode: {
       type: String,
       required: true,

@@ -8,6 +8,10 @@ export const findByShortCode = async (shortCode) => {
   return Url.findOne({ shortCode, isActive: true });
 };
 
+export const findByUserId = async (userId) => {
+  return Url.find({ userId }).sort({ createdAt: -1 });
+};
+
 export const incrementClickCount = async (id) => {
   return Url.findByIdAndUpdate(
     id,
@@ -41,4 +45,8 @@ export const getTotalClicks = async () => {
   ]);
 
   return result[0]?.totalClicks || 0;
+};
+
+export const getTopUrl = async () => {
+  return Url.findOne().sort({ clickCount: -1 }).select("shortCode clickCount");
 };
