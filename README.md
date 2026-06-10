@@ -147,12 +147,26 @@ flowchart TD
 ```mermaid
 flowchart TD
   A[User Visits Short URL] --> B[Extract Short Code]
+
   B --> C[Check Redis Cache]
-  C -->|Hit| D[Redirect User]
-  C -->|Miss| E[Query MongoDB]
-  E --> F[Store in Redis Cache]
-  F --> G[Async: Log Click to Analytics Queue]
-  G --> D
+
+  C -->|Hit| D[Get URL from Cache]
+
+  D --> E[Increment Click Count]
+
+  E --> F[Store Analytics Event]
+
+  F --> G[Redirect User]
+
+  C -->|Miss| H[Query MongoDB]
+
+  H --> I[Store in Redis Cache]
+
+  I --> J[Increment Click Count]
+
+  J --> K[Store Analytics Event]
+
+  K --> G
 ```
 
 > **Note:** Analytics logging is handled asynchronously after the redirect response is sent. This keeps redirect latency minimal even under high traffic.
