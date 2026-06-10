@@ -21,3 +21,24 @@ export const incrementClickCount = async (id) => {
     },
   );
 };
+
+// Dashboard Analytics
+
+export const getTotalUrls = async () => {
+  return Url.countDocuments();
+};
+
+export const getTotalClicks = async () => {
+  const result = await Url.aggregate([
+    {
+      $group: {
+        _id: null,
+        totalClicks: {
+          $sum: "$clickCount",
+        },
+      },
+    },
+  ]);
+
+  return result[0]?.totalClicks || 0;
+};
