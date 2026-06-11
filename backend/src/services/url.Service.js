@@ -4,7 +4,16 @@ import { deleteCache } from "../cache/redisCache.js";
 import AppError from "../utils/AppError.js";
 import mongoose from "mongoose";
 
-export const createShortUrl = async (userId, originalUrl, customAlias) => {
+export const createShortUrl = async (
+  userId,
+  originalUrl,
+  customAlias,
+  expiresAt,
+) => {
+  if (expiresAt && new Date(expiresAt) <= new Date()) {
+    throw new AppError("Expiration date must be in the future", 400);
+  }
+
   let shortCode;
 
   if (customAlias) {
@@ -23,6 +32,7 @@ export const createShortUrl = async (userId, originalUrl, customAlias) => {
     userId,
     originalUrl,
     shortCode,
+    expiresAt,
   });
 
   return url;

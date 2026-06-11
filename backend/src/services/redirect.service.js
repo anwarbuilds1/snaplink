@@ -14,6 +14,16 @@ export const getOriginalUrl = async (shortCode, clickContext) => {
     console.log("CACHE HIT");
 
     const data = JSON.parse(cachedUrl);
+    console.log("NOW:", new Date());
+    console.log("EXPIRES:", data.expiresAt);
+    console.log("EXPIRED:", data.expiresAt < new Date());
+
+    if (data.expiresAt && new Date(data.expiresAt) < new Date()) {
+      await deleteCache(cacheKey);
+
+      throw new AppError("URL has expired", 410);
+    }
+
     await urlRepository.incrementClickCount(data.id);
 
     await analyticsService.trackClick(data.id, clickContext);
@@ -24,9 +34,18 @@ export const getOriginalUrl = async (shortCode, clickContext) => {
   console.log("CACHE MISS");
 
   const url = await urlRepository.findByShortCode(shortCode);
+  console.log("NOW:", new Date());
+  console.log("EXPIRES:", url.expiresAt);
+  console.log("EXPIRED:", url.expiresAt < new Date());
 
   if (!url) {
     throw new AppError("Short URL not found", 404);
+  }
+
+  if (url.expiresAt && url.expiresAt < new Date()) {
+    await deleteCache(cacheKey);
+
+    throw new AppError("URL has expired", 410);
   }
 
   await urlRepository.incrementClickCount(url._id);
@@ -36,6 +55,7 @@ export const getOriginalUrl = async (shortCode, clickContext) => {
   await setCache(cacheKey, {
     id: url._id.toString(),
     originalUrl: url.originalUrl,
+    expiresAt: url.expiresAt,
   });
 
   return url.originalUrl;

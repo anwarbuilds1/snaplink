@@ -2,12 +2,13 @@ import * as urlService from "../services/url.Service.js";
 
 export const createUrl = async (req, res, next) => {
   try {
-    const { originalUrl, customAlias } = req.validatedData;
+    const { originalUrl, customAlias, expiresAt } = req.validatedData;
 
     const url = await urlService.createShortUrl(
       req.user.userId,
       originalUrl,
       customAlias,
+      expiresAt,
     );
 
     return res.status(201).json({

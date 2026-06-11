@@ -8,11 +8,10 @@ export const createUrlSchema = z.object({
     .trim()
     .min(3)
     .max(30)
-    .regex(
-      /^[a-zA-Z0-9-_]+$/,
-      "Only letters, numbers, hyphens and underscores are allowed",
-    )
+    .regex(/^[a-zA-Z0-9_-]+$/)
     .optional(),
+
+  expiresAt: z.iso.datetime().optional(),
 });
 
 export const updateUrlSchema = z.object({
