@@ -15,7 +15,10 @@ export const deleteUrl = async (id) => {
 };
 
 export const findByShortCode = async (shortCode) => {
-  return Url.findOne({ shortCode, isActive: true });
+  return Url.findOne({
+    shortCode,
+    isActive: true,
+  });
 };
 
 export const findByUserId = async (userId) => {

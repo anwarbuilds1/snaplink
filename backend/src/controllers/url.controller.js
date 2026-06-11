@@ -2,9 +2,14 @@ import * as urlService from "../services/url.Service.js";
 
 export const createUrl = async (req, res, next) => {
   try {
-    const { originalUrl } = req.validatedData;
+    const { originalUrl, customAlias } = req.validatedData;
 
-    const url = await urlService.createShortUrl(req.user.userId, originalUrl);
+    const url = await urlService.createShortUrl(
+      req.user.userId,
+      originalUrl,
+      customAlias,
+    );
+
     return res.status(201).json({
       success: true,
       data: url,
@@ -13,6 +18,7 @@ export const createUrl = async (req, res, next) => {
     next(error);
   }
 };
+
 export const updateUrl = async (req, res, next) => {
   try {
     const updatedUrl = await urlService.updateUrl(
@@ -29,6 +35,7 @@ export const updateUrl = async (req, res, next) => {
     next(error);
   }
 };
+
 export const deleteUrl = async (req, res, next) => {
   try {
     await urlService.deleteUrl(req.params.id, req.user.userId);
@@ -41,6 +48,7 @@ export const deleteUrl = async (req, res, next) => {
     next(error);
   }
 };
+
 export const getMyUrls = async (req, res, next) => {
   try {
     const urls = await urlService.getMyUrls(req.user.userId);

@@ -13,6 +13,10 @@ const urlSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
+    customAlias: {
+      type: String,
+      trim: true,
+    },
     shortCode: {
       type: String,
       required: true,

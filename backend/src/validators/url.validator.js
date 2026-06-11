@@ -2,6 +2,17 @@ import { z } from "zod";
 
 export const createUrlSchema = z.object({
   originalUrl: z.url("Please provide a valid URL"),
+
+  customAlias: z
+    .string()
+    .trim()
+    .min(3)
+    .max(30)
+    .regex(
+      /^[a-zA-Z0-9-_]+$/,
+      "Only letters, numbers, hyphens and underscores are allowed",
+    )
+    .optional(),
 });
 
 export const updateUrlSchema = z.object({

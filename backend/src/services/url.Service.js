@@ -4,8 +4,20 @@ import { deleteCache } from "../cache/redisCache.js";
 import AppError from "../utils/AppError.js";
 import mongoose from "mongoose";
 
-export const createShortUrl = async (userId, originalUrl) => {
-  const shortCode = generateShortCode();
+export const createShortUrl = async (userId, originalUrl, customAlias) => {
+  let shortCode;
+
+  if (customAlias) {
+    const existingUrl = await urlRepository.findByShortCode(customAlias);
+
+    if (existingUrl) {
+      throw new AppError("Custom alias already exists", 409);
+    }
+
+    shortCode = customAlias;
+  } else {
+    shortCode = generateShortCode();
+  }
 
   const url = await urlRepository.createUrl({
     userId,
