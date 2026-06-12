@@ -78,8 +78,13 @@ export const deleteUrl = async (urlId, userId) => {
   await urlRepository.deleteUrl(urlId);
   await deleteCache(`url:${url.shortCode}`);
 };
-export const getMyUrls = async (userId) => {
-  return urlRepository.findByUserId(userId);
+export const getMyUrls = async (userId, page = 1, limit = 10) => {
+  const [urls, total] = await Promise.all([
+    urlRepository.findByUserIdPaginated(userId, page, limit),
+    urlRepository.countByUserId(userId),
+  ]);
+
+  return { urls, total };
 };
 
 export const getUrlById = async (urlId, userId) => {
