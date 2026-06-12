@@ -24,6 +24,19 @@ export const findByShortCode = async (shortCode) => {
 export const findByUserId = async (userId) => {
   return Url.find({ userId }).sort({ createdAt: -1 });
 };
+
+export const findByUserIdPaginated = async (userId, page, limit) => {
+  const skip = (page - 1) * limit;
+
+  return Url.find({ userId }).sort({ createdAt: -1 }).skip(skip).limit(limit);
+};
+
+export const countByUserId = async (userId) => {
+  return Url.countDocuments({
+    userId,
+  });
+};
+
 export const findById = async (id) => {
   return Url.findById(id);
 };

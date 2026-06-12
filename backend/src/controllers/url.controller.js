@@ -52,11 +52,26 @@ export const deleteUrl = async (req, res, next) => {
 
 export const getMyUrls = async (req, res, next) => {
   try {
-    const urls = await urlService.getMyUrls(req.user.userId);
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.max(1, Math.min(100, parseInt(req.query.limit) || 10));
+
+    const { urls, total } = await urlService.getMyUrls(
+      req.user.userId,
+      page,
+      limit,
+    );
+
+    const totalPages = Math.ceil(total / limit);
 
     return res.status(200).json({
       success: true,
       data: urls,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages,
+      },
     });
   } catch (error) {
     next(error);
