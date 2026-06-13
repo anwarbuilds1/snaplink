@@ -2,6 +2,7 @@ import logger from "../utils/logger.js";
 
 const errorHandler = (err, req, res, next) => {
   logger.error({
+    requestId: req.requestId,
     err,
     path: req.originalUrl,
     method: req.method,
