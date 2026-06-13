@@ -55,8 +55,6 @@ export const incrementClickCount = async (id) => {
   );
 };
 
-// Dashboard Analytics
-
 export const getTotalUrls = async () => {
   return Url.countDocuments();
 };
@@ -78,4 +76,20 @@ export const getTotalClicks = async () => {
 
 export const getTopUrl = async () => {
   return Url.findOne().sort({ clickCount: -1 }).select("shortCode clickCount");
+};
+
+export const findExpiredUrls = async () => {
+  return Url.find({
+    expiresAt: {
+      $lt: new Date(),
+    },
+  }).select("_id shortCode");
+};
+
+export const deleteManyUrls = async (ids) => {
+  return Url.deleteMany({
+    _id: {
+      $in: ids,
+    },
+  });
 };

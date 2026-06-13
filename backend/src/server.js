@@ -3,6 +3,7 @@ import { env } from "./config/env.js";
 import { connectDB } from "./config/database.js";
 import { connectRedis } from "./config/redis.js";
 import logger from "./utils/logger.js";
+import { startJobs } from "./jobs/index.js";
 
 // import Url from "./models/Url.js";
 // import User from "./models/User.js";
@@ -15,6 +16,7 @@ const startServer = async () => {
     logger.warn("Redis unavailable. Running without cache.");
   }
 
+  startJobs();
   app.listen(env.PORT, () => {
     logger.info({
       port: env.PORT,
