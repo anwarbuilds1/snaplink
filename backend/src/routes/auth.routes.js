@@ -4,6 +4,10 @@ import { validate } from "../middlewares/validate.middleware.js";
 import { loginSchema, registerSchema } from "../validators/auth.validator.js";
 import { authenticate } from "../middlewares/auth.middleware.js";
 import { getMyUrls } from "../controllers/url.controller.js";
+import {
+  loginLimiter,
+  registerLimiter,
+} from "../middlewares/rateLimiter.middleware.js";
 
 const router = Router();
 /**
@@ -34,7 +38,7 @@ const router = Router();
  *       201:
  *         description: User registered successfully
  */
-router.post("/register", validate(registerSchema), register);
+router.post("/register", registerLimiter, validate(registerSchema), register);
 /**
  * @swagger
  * /api/v1/auth/login:
@@ -60,7 +64,7 @@ router.post("/register", validate(registerSchema), register);
  *       200:
  *         description: Login successful
  */
-router.post("/login", validate(loginSchema), login);
+router.post("/login", loginLimiter, validate(loginSchema), login);
 /**
  * @swagger
  * /api/v1/auth/profile:

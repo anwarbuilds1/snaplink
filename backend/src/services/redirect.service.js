@@ -3,7 +3,7 @@ import * as analyticsService from "./analytics.service.js";
 
 import AppError from "../utils/AppError.js";
 
-import { getCache, setCache } from "../cache/redisCache.js";
+import { getCache, setCache, deleteCache } from "../cache/redisCache.js";
 
 export const getOriginalUrl = async (shortCode, clickContext) => {
   const cacheKey = `url:${shortCode}`;

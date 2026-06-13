@@ -2,6 +2,7 @@ import { Router } from "express";
 import { redirectToOriginalUrl } from "../controllers/redirect.controller.js";
 import { validate } from "../middlewares/validate.middleware.js";
 import { shortCodeParamSchema } from "../validators/url.validator.js";
+import { redirectLimiter } from "../middlewares/rateLimiter.middleware.js";
 
 const router = Router();
 /**
@@ -27,6 +28,7 @@ const router = Router();
  */
 router.get(
   "/:shortCode",
+  redirectLimiter,
   validate(shortCodeParamSchema, "params"),
   redirectToOriginalUrl,
 );
