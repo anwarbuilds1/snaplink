@@ -4,6 +4,7 @@ import {
   deleteUrl,
   getUrlById,
   updateUrl,
+  getQrCode,
 } from "../controllers/url.controller.js";
 import { authenticate } from "../middlewares/auth.middleware.js";
 import { validate } from "../middlewares/validate.middleware.js";
@@ -13,6 +14,9 @@ import {
 } from "../validators/url.validator.js";
 
 const router = Router();
+
+router.get("/:id/qr", authenticate, getQrCode);
+
 /**
  * @swagger
  * /api/v1/urls/{id}:

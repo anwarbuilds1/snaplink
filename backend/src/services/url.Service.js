@@ -3,6 +3,8 @@ import * as urlRepository from "../repositories/url.repository.js";
 import { deleteCache } from "../cache/redisCache.js";
 import AppError from "../utils/AppError.js";
 import mongoose from "mongoose";
+import QRCode from "qrcode";
+import { env } from "../config/env.js";
 
 export const createShortUrl = async (
   userId,
@@ -102,4 +104,12 @@ export const getUrlById = async (urlId, userId) => {
   }
 
   return url;
+};
+
+export const generateQrCode = async (urlId, userId) => {
+  const url = await getUrlById(urlId, userId);
+
+  const shortUrl = `${env.BASE_URL}/${url.shortCode}`;
+
+  return QRCode.toBuffer(shortUrl);
 };

@@ -90,3 +90,18 @@ export const getUrlById = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getQrCode = async (req, res, next) => {
+  try {
+    const qrBuffer = await urlService.generateQrCode(
+      req.params.id,
+      req.user.userId,
+    );
+
+    res.setHeader("Content-Type", "image/png");
+
+    return res.send(qrBuffer);
+  } catch (error) {
+    next(error);
+  }
+};
