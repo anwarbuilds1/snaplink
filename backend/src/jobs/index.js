@@ -1,5 +1,6 @@
 import cron from "node-cron";
 import deleteExpiredUrlsJob from "./deleteExpiredUrls.job.js";
+import analyticsAggregationJob from "./analyticsAggregation.job.js";
 import logger from "../utils/logger.js";
 
 export const startJobs = () => {
@@ -11,3 +12,7 @@ export const startJobs = () => {
     await deleteExpiredUrlsJob();
   });
 };
+
+cron.schedule("0 0 * * *", async () => {
+  await analyticsAggregationJob();
+});

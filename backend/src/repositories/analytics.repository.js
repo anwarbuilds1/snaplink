@@ -58,3 +58,33 @@ export const getOsStats = async (urlId) => {
     },
   ]);
 };
+
+export const getDailyAnalyticsAggregation = async () => {
+  return Analytics.aggregate([
+    {
+      $group: {
+        _id: {
+          urlId: "$urlId",
+          date: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: "$clickedAt",
+            },
+          },
+        },
+
+        totalClicks: {
+          $sum: 1,
+        },
+
+        browsers: {
+          $push: "$browser",
+        },
+
+        operatingSystems: {
+          $push: "$os",
+        },
+      },
+    },
+  ]);
+};
