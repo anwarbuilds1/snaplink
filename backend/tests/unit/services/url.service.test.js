@@ -3,10 +3,18 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 vi.mock("../../../src/repositories/url.repository.js", () => ({
   findByShortCode: vi.fn(),
   createUrl: vi.fn(),
+  findById: vi.fn(),
+  updateUrl: vi.fn(),
+}));
+vi.mock("../../../src/cache/redisCache.js", () => ({
+  deleteCache: vi.fn(),
 }));
 
 import * as urlRepository from "../../../src/repositories/url.repository.js";
-import { createShortUrl } from "../../../src/services/url.Service.js";
+import {
+  createShortUrl,
+  updateUrl,
+} from "../../../src/services/url.Service.js";
 
 describe("createShortUrl", () => {
   beforeEach(() => {
@@ -33,31 +41,68 @@ describe("createShortUrl", () => {
       createShortUrl("userId", "https://google.com", "google", null),
     ).rejects.toThrow("Custom alias already exists");
   });
+
+  it("should create short url successfully", async () => {
+    urlRepository.findByShortCode.mockResolvedValue(null);
+
+    urlRepository.createUrl.mockResolvedValue({
+      _id: "123",
+      originalUrl: "https://google.com",
+      shortCode: "google",
+    });
+
+    const result = await createShortUrl(
+      "userId",
+      "https://google.com",
+      "google",
+      null,
+    );
+
+    expect(result).toEqual({
+      _id: "123",
+      originalUrl: "https://google.com",
+      shortCode: "google",
+    });
+
+    expect(urlRepository.findByShortCode).toHaveBeenCalledWith("google");
+
+    expect(urlRepository.createUrl).toHaveBeenCalledTimes(1);
+  });
 });
 
-it("should create short url successfully", async () => {
-  urlRepository.findByShortCode.mockResolvedValue(null);
-
-  urlRepository.createUrl.mockResolvedValue({
-    _id: "123",
-    originalUrl: "https://google.com",
-    shortCode: "google",
+describe("updateUrl", () => {
+  it("should throw error if url id is invalid", async () => {
+    await expect(
+      updateUrl("invalid-id", "user123", "https://google.com"),
+    ).rejects.toThrow("Invalid URL ID");
   });
 
-  const result = await createShortUrl(
-    "userId",
-    "https://google.com",
-    "google",
-    null,
-  );
+  it("should throw error if url does not exist", async () => {
+    urlRepository.findById.mockResolvedValue(null);
 
-  expect(result).toEqual({
-    _id: "123",
-    originalUrl: "https://google.com",
-    shortCode: "google",
+    await expect(
+      updateUrl("6a2c5199d45691f3b7c5f6bf", "user123", "https://google.com"),
+    ).rejects.toThrow("URL not found");
+
+    expect(urlRepository.findById).toHaveBeenCalledTimes(1);
   });
 
-  expect(urlRepository.findByShortCode).toHaveBeenCalledWith("google");
+  it("should throw error if user does not own the url", async () => {
+    urlRepository.findById.mockResolvedValue({
+      _id: "6a2c5199d45691f3b7c5f6bf",
+      userId: {
+        toString: () => "owner123",
+      },
+    });
 
-  expect(urlRepository.createUrl).toHaveBeenCalledTimes(1);
+    await expect(
+      updateUrl(
+        "6a2c5199d45691f3b7c5f6bf",
+        "differentUser456",
+        "https://google.com",
+      ),
+    ).rejects.toThrow("Forbidden");
+
+    expect(urlRepository.updateUrl).not.toHaveBeenCalled();
+  });
 });
