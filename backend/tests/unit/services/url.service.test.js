@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-
+import { deleteCache } from "../../../src/cache/redisCache.js";
 vi.mock("../../../src/repositories/url.repository.js", () => ({
   findByShortCode: vi.fn(),
   createUrl: vi.fn(),
@@ -104,5 +104,36 @@ describe("updateUrl", () => {
     ).rejects.toThrow("Forbidden");
 
     expect(urlRepository.updateUrl).not.toHaveBeenCalled();
+  });
+
+  it("should update url successfully", async () => {
+    const existingUrl = {
+      _id: "6a2c5199d45691f3b7c5f6bf",
+      userId: {
+        toString: () => "user123",
+      },
+      shortCode: "google",
+    };
+
+    const updatedUrl = {
+      ...existingUrl,
+      originalUrl: "https://updated.com",
+    };
+
+    urlRepository.findById.mockResolvedValue(existingUrl);
+
+    urlRepository.updateUrl.mockResolvedValue(updatedUrl);
+
+    const result = await updateUrl(
+      "6a2c5199d45691f3b7c5f6bf",
+      "user123",
+      "https://updated.com",
+    );
+
+    expect(result).toEqual(updatedUrl);
+
+    expect(urlRepository.updateUrl).toHaveBeenCalledTimes(1);
+
+    expect(deleteCache).toHaveBeenCalledTimes(1);
   });
 });
