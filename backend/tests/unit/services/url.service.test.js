@@ -5,6 +5,7 @@ vi.mock("../../../src/repositories/url.repository.js", () => ({
   createUrl: vi.fn(),
   findById: vi.fn(),
   updateUrl: vi.fn(),
+  deleteUrl: vi.fn(),
 }));
 vi.mock("../../../src/cache/redisCache.js", () => ({
   deleteCache: vi.fn(),
@@ -14,6 +15,7 @@ import * as urlRepository from "../../../src/repositories/url.repository.js";
 import {
   createShortUrl,
   updateUrl,
+  deleteUrl,
 } from "../../../src/services/url.Service.js";
 
 describe("createShortUrl", () => {
@@ -132,9 +134,14 @@ describe("updateUrl", () => {
 
     expect(result).toEqual(updatedUrl);
 
-    expect(urlRepository.updateUrl).toHaveBeenCalledTimes(1);
+    expect(urlRepository.updateUrl).toHaveBeenCalledWith(
+      "6a2c5199d45691f3b7c5f6bf",
+      {
+        originalUrl: "https://updated.com",
+      },
+    );
 
-    expect(deleteCache).toHaveBeenCalledTimes(1);
+    expect(deleteCache).toHaveBeenCalledWith("url:google");
   });
 });
 
