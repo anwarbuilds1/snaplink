@@ -7,6 +7,7 @@ vi.mock("../../../src/repositories/url.repository.js", () => ({
   updateUrl: vi.fn(),
   deleteUrl: vi.fn(),
 }));
+
 vi.mock("../../../src/cache/redisCache.js", () => ({
   deleteCache: vi.fn(),
 }));
@@ -16,6 +17,7 @@ import {
   createShortUrl,
   updateUrl,
   deleteUrl,
+  getUrlById,
 } from "../../../src/services/url.Service.js";
 
 describe("createShortUrl", () => {
@@ -200,5 +202,63 @@ describe("deleteUrl", () => {
     );
 
     expect(deleteCache).toHaveBeenCalledWith("url:google");
+  });
+});
+
+describe("getUrlById", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("should throw error if url id is invalid", async () => {
+    await expect(getUrlById("invalid-id", "user123")).rejects.toThrow(
+      "Invalid URL ID",
+    );
+  });
+
+  it("should throw error if url does not exist", async () => {
+    urlRepository.findById.mockResolvedValue(null);
+
+    await expect(
+      getUrlById("6a2c5199d45691f3b7c5f6bf", "user123"),
+    ).rejects.toThrow("URL not found");
+
+    expect(urlRepository.findById).toHaveBeenCalledWith(
+      "6a2c5199d45691f3b7c5f6bf",
+    );
+  });
+
+  it("should throw error if user does not own the url", async () => {
+    urlRepository.findById.mockResolvedValue({
+      _id: "6a2c5199d45691f3b7c5f6bf",
+      userId: {
+        toString: () => "owner123",
+      },
+    });
+
+    await expect(
+      getUrlById("6a2c5199d45691f3b7c5f6bf", "differentUser456"),
+    ).rejects.toThrow("Forbidden");
+  });
+
+  it("should return url successfully", async () => {
+    const url = {
+      _id: "6a2c5199d45691f3b7c5f6bf",
+      shortCode: "google",
+      originalUrl: "https://google.com",
+      userId: {
+        toString: () => "user123",
+      },
+    };
+
+    urlRepository.findById.mockResolvedValue(url);
+
+    const result = await getUrlById("6a2c5199d45691f3b7c5f6bf", "user123");
+
+    expect(result).toEqual(url);
+
+    expect(urlRepository.findById).toHaveBeenCalledWith(
+      "6a2c5199d45691f3b7c5f6bf",
+    );
   });
 });
