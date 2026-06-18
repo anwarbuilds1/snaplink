@@ -137,3 +137,61 @@ describe("updateUrl", () => {
     expect(deleteCache).toHaveBeenCalledTimes(1);
   });
 });
+
+describe("deleteUrl", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("should throw error if url id is invalid", async () => {
+    await expect(deleteUrl("invalid-id", "user123")).rejects.toThrow(
+      "Invalid URL ID",
+    );
+  });
+
+  it("should throw error if url does not exist", async () => {
+    urlRepository.findById.mockResolvedValue(null);
+
+    await expect(
+      deleteUrl("6a2c5199d45691f3b7c5f6bf", "user123"),
+    ).rejects.toThrow("URL not found");
+
+    expect(urlRepository.findById).toHaveBeenCalledTimes(1);
+  });
+
+  it("should throw error if user does not own the url", async () => {
+    urlRepository.findById.mockResolvedValue({
+      _id: "6a2c5199d45691f3b7c5f6bf",
+      userId: {
+        toString: () => "owner123",
+      },
+      shortCode: "google",
+    });
+
+    await expect(
+      deleteUrl("6a2c5199d45691f3b7c5f6bf", "differentUser456"),
+    ).rejects.toThrow("Forbidden");
+
+    expect(urlRepository.deleteUrl).not.toHaveBeenCalled();
+  });
+
+  it("should delete url successfully", async () => {
+    const existingUrl = {
+      _id: "6a2c5199d45691f3b7c5f6bf",
+      userId: {
+        toString: () => "user123",
+      },
+      shortCode: "google",
+    };
+
+    urlRepository.findById.mockResolvedValue(existingUrl);
+
+    await deleteUrl("6a2c5199d45691f3b7c5f6bf", "user123");
+
+    expect(urlRepository.deleteUrl).toHaveBeenCalledWith(
+      "6a2c5199d45691f3b7c5f6bf",
+    );
+
+    expect(deleteCache).toHaveBeenCalledWith("url:google");
+  });
+});
