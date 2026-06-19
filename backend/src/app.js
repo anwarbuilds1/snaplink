@@ -20,15 +20,15 @@ app.use(express.json());
 app.use(cors());
 app.use(helmet());
 app.use(requestId);
-// app.use((req, _res, next) => {
-//   logger.info({
-//     requestId: req.requestId,
-//     path: req.originalUrl,
-//     method: req.method,
-//   });
+app.use((req, _res, next) => {
+  logger.info({
+    requestId: req.requestId,
+    path: req.originalUrl,
+    method: req.method,
+  });
 
-//   next();
-// });
+  next();
+});
 app.use(morgan("dev"));
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
