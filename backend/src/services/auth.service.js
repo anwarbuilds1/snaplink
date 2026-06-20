@@ -1,7 +1,11 @@
 import bcrypt from "bcrypt";
 import * as userRepository from "../repositories/user.repository.js";
 import AppError from "../utils/AppError.js";
-import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  verifyRefreshToken,
+} from "../utils/jwt.js";
 
 export const register = async ({ name, email, password }) => {
   const existingUser = await userRepository.findByEmail(email);
@@ -84,5 +88,31 @@ export const getProfile = async (userId) => {
     id: user._id,
     name: user.name,
     email: user.email,
+  };
+};
+
+export const refreshAccessToken = async (refreshToken) => {
+  const payload = verifyRefreshToken(refreshToken);
+
+  const user = await userRepository.findByRefreshToken(refreshToken);
+
+  if (!user) {
+    throw new AppError("Invalid refresh token", 401);
+  }
+
+  const accessToken = generateAccessToken({
+    userId: user._id,
+  });
+
+  return {
+    accessToken,
+  };
+};
+
+export const logout = async (userId) => {
+  await userRepository.clearRefreshToken(userId);
+
+  return {
+    message: "Logged out successfully",
   };
 };
