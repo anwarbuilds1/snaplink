@@ -39,7 +39,7 @@ describe("GET /:shortCode", () => {
         password: "password123",
       });
 
-    const token = registerResponse.body.data.token;
+    const token = registerResponse.body.data.accessToken;
 
     const createResponse = await request(app)
       .post("/api/v1/urls")
@@ -47,6 +47,8 @@ describe("GET /:shortCode", () => {
       .send({
         originalUrl: "https://github.com",
       });
+
+    expect(createResponse.status).toBe(201);
 
     const shortCode = createResponse.body.data.shortCode;
 

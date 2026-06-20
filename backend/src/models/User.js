@@ -18,6 +18,11 @@ const userSchema = new mongoose.Schema(
       required: true,
       select: false,
     },
+    refreshToken: {
+      type: String,
+      default: null,
+      select: false,
+    },
     // isVerified: {
     //   type: Boolean,
     //   default: false,

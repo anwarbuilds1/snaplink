@@ -12,15 +12,20 @@ vi.mock("../../../src/repositories/user.repository.js", () => ({
   findByEmail: vi.fn(),
   createUser: vi.fn(),
   findById: vi.fn(),
+  updateRefreshToken: vi.fn(),
 }));
 
 vi.mock("../../../src/utils/jwt.js", () => ({
-  generateToken: vi.fn(),
+  generateAccessToken: vi.fn(() => "access-token"),
+  generateRefreshToken: vi.fn(() => "refresh-token"),
 }));
 
-import bcrypt from "bcrypt";
 import * as userRepository from "../../../src/repositories/user.repository.js";
-import { generateToken } from "../../../src/utils/jwt.js";
+
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from "../../../src/utils/jwt.js";
 
 import {
   register,
@@ -48,10 +53,10 @@ describe("register", () => {
     ).rejects.toThrow("User already exists");
 
     expect(userRepository.createUser).not.toHaveBeenCalled();
-
     expect(bcrypt.hash).not.toHaveBeenCalled();
 
-    expect(generateToken).not.toHaveBeenCalled();
+    expect(generateAccessToken).not.toHaveBeenCalled();
+    expect(generateRefreshToken).not.toHaveBeenCalled();
   });
 
   it("should register user successfully", async () => {
@@ -64,8 +69,6 @@ describe("register", () => {
       name: "Anwar",
       email: "anwar@example.com",
     });
-
-    generateToken.mockReturnValue("jwt-token");
 
     const result = await register({
       name: "Anwar",
@@ -81,9 +84,18 @@ describe("register", () => {
       password: "hashedPassword",
     });
 
-    expect(generateToken).toHaveBeenCalledWith({
+    expect(generateAccessToken).toHaveBeenCalledWith({
       userId: "123",
     });
+
+    expect(generateRefreshToken).toHaveBeenCalledWith({
+      userId: "123",
+    });
+
+    expect(userRepository.updateRefreshToken).toHaveBeenCalledWith(
+      "123",
+      "refresh-token",
+    );
 
     expect(result).toEqual({
       user: {
@@ -91,7 +103,8 @@ describe("register", () => {
         name: "Anwar",
         email: "anwar@example.com",
       },
-      token: "jwt-token",
+      accessToken: "access-token",
+      refreshToken: "refresh-token",
     });
   });
 });
@@ -109,10 +122,12 @@ describe("login", () => {
         email: "anwar@example.com",
         password: "password123",
       }),
-    ).rejects.toThrow("Invalid credentials U");
+    ).rejects.toThrow("Invalid credentials");
 
     expect(bcrypt.compare).not.toHaveBeenCalled();
-    expect(generateToken).not.toHaveBeenCalled();
+
+    expect(generateAccessToken).not.toHaveBeenCalled();
+    expect(generateRefreshToken).not.toHaveBeenCalled();
   });
 
   it("should throw error if password is invalid", async () => {
@@ -129,9 +144,10 @@ describe("login", () => {
         email: "anwar@example.com",
         password: "wrongPassword",
       }),
-    ).rejects.toThrow("Invalid Credentials P");
+    ).rejects.toThrow("Invalid credentials");
 
-    expect(generateToken).not.toHaveBeenCalled();
+    expect(generateAccessToken).not.toHaveBeenCalled();
+    expect(generateRefreshToken).not.toHaveBeenCalled();
   });
 
   it("should login successfully", async () => {
@@ -144,8 +160,6 @@ describe("login", () => {
 
     bcrypt.compare.mockResolvedValue(true);
 
-    generateToken.mockReturnValue("jwt-token");
-
     const result = await login({
       email: "anwar@example.com",
       password: "password123",
@@ -156,9 +170,18 @@ describe("login", () => {
       "hashedPassword",
     );
 
-    expect(generateToken).toHaveBeenCalledWith({
+    expect(generateAccessToken).toHaveBeenCalledWith({
       userId: "123",
     });
+
+    expect(generateRefreshToken).toHaveBeenCalledWith({
+      userId: "123",
+    });
+
+    expect(userRepository.updateRefreshToken).toHaveBeenCalledWith(
+      "123",
+      "refresh-token",
+    );
 
     expect(result).toEqual({
       user: {
@@ -166,7 +189,8 @@ describe("login", () => {
         name: "Anwar",
         email: "anwar@example.com",
       },
-      token: "jwt-token",
+      accessToken: "access-token",
+      refreshToken: "refresh-token",
     });
   });
 });

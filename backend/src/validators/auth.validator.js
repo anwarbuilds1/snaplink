@@ -1,4 +1,4 @@
-import { email, z } from "zod";
+import { z } from "zod";
 
 export const registerSchema = z.object({
   name: z.string().min(2),
@@ -9,4 +9,8 @@ export const registerSchema = z.object({
 export const loginSchema = z.object({
   email: z.email(),
   password: z.string().min(0),
+});
+
+export const refreshTokenSchema = z.object({
+  refreshToken: z.string().min(1),
 });
