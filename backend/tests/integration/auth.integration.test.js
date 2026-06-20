@@ -1,4 +1,4 @@
-import { beforeAll, afterAll, beforeEach } from "vitest";
+import { beforeAll, afterAll, beforeEach, describe, it, expect } from "vitest";
 import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 
@@ -25,7 +25,6 @@ beforeEach(async () => {
 });
 
 import request from "supertest";
-import { describe, it, expect } from "vitest";
 
 import app from "../../src/app.js";
 
