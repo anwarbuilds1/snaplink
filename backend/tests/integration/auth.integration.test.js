@@ -1,6 +1,9 @@
 import { beforeAll, afterAll, beforeEach, describe, it, expect } from "vitest";
 import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
+import request from "supertest";
+
+import app from "../../src/app.js";
 
 let mongoServer;
 
@@ -24,10 +27,6 @@ beforeEach(async () => {
   }
 });
 
-import request from "supertest";
-
-import app from "../../src/app.js";
-
 describe("POST /api/v1/auth/register", () => {
   it("should register a user successfully", async () => {
     const response = await request(app).post("/api/v1/auth/register").send({
@@ -37,13 +36,15 @@ describe("POST /api/v1/auth/register", () => {
     });
 
     expect(response.status).toBe(201);
-
     expect(response.body.success).toBe(true);
 
     expect(response.body.data.user.email).toBe("anwar@example.com");
 
-    expect(response.body.data.token).toBeDefined();
+    expect(response.body.data.accessToken).toBeDefined();
+
+    expect(response.body.data.refreshToken).toBeDefined();
   });
+
   it("should not allow duplicate email registration", async () => {
     const user = {
       name: "Anwar",
@@ -58,7 +59,6 @@ describe("POST /api/v1/auth/register", () => {
       .send(user);
 
     expect(response.status).toBe(400);
-
     expect(response.body.success).toBe(false);
   });
 });
@@ -77,10 +77,11 @@ describe("POST /api/v1/auth/login", () => {
     });
 
     expect(response.status).toBe(200);
-
     expect(response.body.success).toBe(true);
 
-    expect(response.body.data.token).toBeDefined();
+    expect(response.body.data.accessToken).toBeDefined();
+
+    expect(response.body.data.refreshToken).toBeDefined();
   });
 
   it("should reject invalid password", async () => {
@@ -96,7 +97,6 @@ describe("POST /api/v1/auth/login", () => {
     });
 
     expect(response.status).toBe(401);
-
     expect(response.body.success).toBe(false);
   });
 });
@@ -111,14 +111,13 @@ describe("GET /api/v1/auth/profile", () => {
         password: "password123",
       });
 
-    const token = registerResponse.body.data.token;
+    const token = registerResponse.body.data.accessToken;
 
     const response = await request(app)
       .get("/api/v1/auth/profile")
       .set("Authorization", `Bearer ${token}`);
 
     expect(response.status).toBe(200);
-
     expect(response.body.success).toBe(true);
 
     expect(response.body.data.email).toBe("anwar@example.com");
@@ -141,7 +140,7 @@ describe("POST /api/v1/urls", () => {
         password: "password123",
       });
 
-    const token = registerResponse.body.data.token;
+    const token = registerResponse.body.data.accessToken;
 
     const response = await request(app)
       .post("/api/v1/urls")
@@ -151,13 +150,13 @@ describe("POST /api/v1/urls", () => {
       });
 
     expect(response.status).toBe(201);
-
     expect(response.body.success).toBe(true);
 
     expect(response.body.data.originalUrl).toBe("https://github.com");
 
     expect(response.body.data.shortCode).toBeDefined();
   });
+
   it("should reject unauthenticated requests", async () => {
     const response = await request(app).post("/api/v1/urls").send({
       originalUrl: "https://github.com",
@@ -177,7 +176,7 @@ describe("GET /api/v1/urls/:id", () => {
         password: "password123",
       });
 
-    const token = registerResponse.body.data.token;
+    const token = registerResponse.body.data.accessToken;
 
     const createResponse = await request(app)
       .post("/api/v1/urls")
@@ -193,9 +192,7 @@ describe("GET /api/v1/urls/:id", () => {
       .set("Authorization", `Bearer ${token}`);
 
     expect(response.status).toBe(200);
-
     expect(response.body.success).toBe(true);
-
     expect(response.body.data._id).toBe(urlId);
   });
 });
@@ -210,7 +207,7 @@ describe("PATCH /api/v1/urls/:id", () => {
         password: "password123",
       });
 
-    const token = registerResponse.body.data.token;
+    const token = registerResponse.body.data.accessToken;
 
     const createResponse = await request(app)
       .post("/api/v1/urls")
@@ -229,7 +226,6 @@ describe("PATCH /api/v1/urls/:id", () => {
       });
 
     expect(response.status).toBe(200);
-
     expect(response.body.success).toBe(true);
 
     expect(response.body.data.originalUrl).toBe("https://updated.com");
@@ -246,7 +242,7 @@ describe("DELETE /api/v1/urls/:id", () => {
         password: "password123",
       });
 
-    const token = registerResponse.body.data.token;
+    const token = registerResponse.body.data.accessToken;
 
     const createResponse = await request(app)
       .post("/api/v1/urls")
@@ -262,7 +258,6 @@ describe("DELETE /api/v1/urls/:id", () => {
       .set("Authorization", `Bearer ${token}`);
 
     expect(response.status).toBe(200);
-
     expect(response.body.success).toBe(true);
   });
 });
