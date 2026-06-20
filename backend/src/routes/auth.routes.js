@@ -1,7 +1,17 @@
 import { Router } from "express";
-import { register, login, getProfile } from "../controllers/auth.controller.js";
+import {
+  register,
+  login,
+  getProfile,
+  refreshToken,
+  logout,
+} from "../controllers/auth.controller.js";
 import { validate } from "../middlewares/validate.middleware.js";
-import { loginSchema, registerSchema } from "../validators/auth.validator.js";
+import {
+  loginSchema,
+  registerSchema,
+  refreshTokenSchema,
+} from "../validators/auth.validator.js";
 import { authenticate } from "../middlewares/auth.middleware.js";
 import { getMyUrls } from "../controllers/url.controller.js";
 import {
@@ -65,6 +75,48 @@ router.post("/register", registerLimiter, validate(registerSchema), register);
  *         description: Login successful
  */
 router.post("/login", loginLimiter, validate(loginSchema), login);
+/**
+ * @swagger
+ * /api/v1/auth/refresh:
+ *   post:
+ *     summary: Generate a new access token using a refresh token
+ *     tags:
+ *       - Authentication
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - refreshToken
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: New access token generated
+ *       401:
+ *         description: Invalid refresh token
+ */
+router.post("/refresh", validate(refreshTokenSchema), refreshToken);
+/**
+ * @swagger
+ * /api/v1/auth/logout:
+ *   post:
+ *     summary: Logout the authenticated user
+ *     tags:
+ *       - Authentication
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Logged out successfully
+ *       401:
+ *         description: Unauthorized
+ */
+router.post("/logout", authenticate, logout);
+
 /**
  * @swagger
  * /api/v1/auth/profile:

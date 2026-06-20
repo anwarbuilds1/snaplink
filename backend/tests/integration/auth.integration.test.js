@@ -261,3 +261,49 @@ describe("DELETE /api/v1/urls/:id", () => {
     expect(response.body.success).toBe(true);
   });
 });
+
+describe("POST /api/v1/auth/refresh", () => {
+  it("should generate new access token", async () => {
+    const registerResponse = await request(app)
+      .post("/api/v1/auth/register")
+      .send({
+        name: "Anwar",
+        email: "anwar@example.com",
+        password: "password123",
+      });
+
+    const refreshToken = registerResponse.body.data.refreshToken;
+
+    const response = await request(app).post("/api/v1/auth/refresh").send({
+      refreshToken,
+    });
+
+    expect(response.status).toBe(200);
+
+    expect(response.body.success).toBe(true);
+
+    expect(response.body.data.accessToken).toBeDefined();
+  });
+});
+
+describe("POST /api/v1/auth/logout", () => {
+  it("should logout successfully", async () => {
+    const registerResponse = await request(app)
+      .post("/api/v1/auth/register")
+      .send({
+        name: "Anwar",
+        email: "anwar@example.com",
+        password: "password123",
+      });
+
+    const accessToken = registerResponse.body.data.accessToken;
+
+    const response = await request(app)
+      .post("/api/v1/auth/logout")
+      .set("Authorization", `Bearer ${accessToken}`);
+
+    expect(response.status).toBe(200);
+
+    expect(response.body.success).toBe(true);
+  });
+});
