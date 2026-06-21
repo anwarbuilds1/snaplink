@@ -4,8 +4,10 @@ export const getUrlAnalytics = async (req, res, next) => {
   try {
     const { urlId } = req.params;
 
-    const analytics = await analyticsService.getUrlAnalytics(urlId);
-
+    const analytics = await analyticsService.getUrlAnalytics(
+      urlId,
+      req.user.userId,
+    );
     return res.status(200).json({
       success: true,
       data: analytics,
