@@ -5,6 +5,7 @@ import {
   getDashboardStats,
 } from "../controllers/analytics.controller.js";
 import { validate } from "../middlewares/validate.middleware.js";
+import { authenticate } from "../middlewares/auth.middleware.js";
 import { urlIdParamSchema } from "../validators/url.validator.js";
 
 const router = Router();
@@ -38,6 +39,11 @@ router.get("/dashboard", getDashboardStats);
  *         description: Analytics data
  */
 
-router.get("/:urlId", validate(urlIdParamSchema, "params"), getUrlAnalytics);
+router.get(
+  "/:urlId",
+  authenticate,
+  validate(urlIdParamSchema, "params"),
+  getUrlAnalytics,
+);
 
 export default router;

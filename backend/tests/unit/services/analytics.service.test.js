@@ -6,11 +6,16 @@ vi.mock("../../../src/repositories/analytics.repository.js", () => ({
   getOsStats: vi.fn(),
 }));
 
+vi.mock("../../../src/repositories/url.repository.js", () => ({
+  findById: vi.fn(),
+}));
+
 vi.mock("../../../src/utils/extractDeviceInfo.js", () => ({
   extractDeviceInfo: vi.fn(),
 }));
 
 import * as analyticsRepository from "../../../src/repositories/analytics.repository.js";
+import * as urlRepository from "../../../src/repositories/url.repository.js";
 
 import { extractDeviceInfo } from "../../../src/utils/extractDeviceInfo.js";
 
@@ -51,6 +56,13 @@ describe("getUrlAnalytics", () => {
   });
 
   it("should return formatted analytics", async () => {
+    urlRepository.findById.mockResolvedValue({
+      _id: "url123",
+      userId: {
+        toString: () => "user123",
+      },
+    });
+
     analyticsRepository.getBrowserStats.mockResolvedValue([
       { _id: "chrome", count: 10 },
       { _id: "firefox", count: 5 },
@@ -61,7 +73,7 @@ describe("getUrlAnalytics", () => {
       { _id: "windows", count: 7 },
     ]);
 
-    const result = await getUrlAnalytics("url123");
+    const result = await getUrlAnalytics("url123", "user123");
 
     expect(result).toEqual({
       totalClicks: 15,
@@ -76,5 +88,18 @@ describe("getUrlAnalytics", () => {
         windows: 7,
       },
     });
+  });
+
+  it("should throw forbidden when user does not own url", async () => {
+    urlRepository.findById.mockResolvedValue({
+      _id: "url123",
+      userId: {
+        toString: () => "another-user",
+      },
+    });
+
+    await expect(getUrlAnalytics("url123", "user123")).rejects.toThrow(
+      "Forbidden",
+    );
   });
 });

@@ -1,5 +1,6 @@
 import * as analyticsRepository from "../repositories/analytics.repository.js";
 import * as urlRepository from "../repositories/url.repository.js";
+import AppError from "../utils/AppError.js";
 
 import { extractDeviceInfo } from "../utils/extractDeviceInfo.js";
 
@@ -23,7 +24,17 @@ const formatStats = (stats) => {
   }, {});
 };
 
-export const getUrlAnalytics = async (urlId) => {
+export const getUrlAnalytics = async (urlId, userId) => {
+  const url = await urlRepository.findById(urlId);
+
+  if (!url) {
+    throw new AppError("URL not found", 404);
+  }
+
+  if (url.userId.toString() !== userId) {
+    throw new AppError("Forbidden", 403);
+  }
+
   const browserStats = await analyticsRepository.getBrowserStats(urlId);
 
   const osStats = await analyticsRepository.getOsStats(urlId);
