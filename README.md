@@ -1,6 +1,3 @@
-**Here is the complete, final, and perfected `README.md` file** with all new updates integrated while preserving the full detailed structure, folder structure, flows, and content from the old version:
-
-````markdown
 # URL Shortener
 
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green)](https://nodejs.org)
@@ -63,6 +60,7 @@ Services --> Repositories
 Services --> Redis
 Repositories --> Mongo
 ```
+
 ````
 
 ---
@@ -104,9 +102,9 @@ cp frontend/.env.example frontend/.env
 docker compose up --build
 ```
 
-Frontend: http://localhost:5173  
-Backend API: http://localhost:5000  
-MongoDB: localhost:27017  
+Frontend: http://localhost:5173
+Backend API: http://localhost:5000
+MongoDB: localhost:27017
 Redis: localhost:6379
 
 ### Manual Setup
@@ -607,3 +605,4 @@ Detailed architecture documentation is available in:
 MIT
 
 ---
+````
