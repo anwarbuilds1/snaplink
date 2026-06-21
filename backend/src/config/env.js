@@ -19,7 +19,7 @@ const envSchema = z.object({
   JWT_REFRESH_EXPIRES_IN: z.string().default("7d"),
 
   BASE_URL: isTest
-    ? z.string().default("http://localhost:3000")
+    ? z.string().default("http://localhost:5000")
     : z.string().url(),
 
   NODE_ENV: z
