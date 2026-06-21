@@ -1,48 +1,47 @@
 name: Run Tests
 
 on:
-push:
-branches:
-- main
-- develop
-- feat/**
-pull_request:
-branches:
-- main
-- develop
+  push:
+    branches:
+      - main
+      - develop
+      - feat/**
+  pull_request:
+    branches:
+      - main
+      - develop
 
 jobs:
-test:
-runs-on: ubuntu-latest
-timeout-minutes: 5
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
 
-```
-strategy:
-  matrix:
-    node-version: [22.x]
+    strategy:
+      matrix:
+        node-version:
+          - 22.x
 
-defaults:
-  run:
-    working-directory: backend
+    defaults:
+      run:
+        working-directory: backend
 
-steps:
-  - name: Checkout Repository
-    uses: actions/checkout@v4
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-  - name: Setup Node.js
-    uses: actions/setup-node@v4
-    with:
-      node-version: ${{ matrix.node-version }}
-      cache: npm
-      cache-dependency-path: backend/package-lock.json
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
 
-  - name: Install Dependencies
-    run: npm ci
+      - name: Install Dependencies
+        run: npm ci
 
-  - name: Run Tests
-    env:
-      NODE_ENV: test
-      JWT_SECRET: test-secret
-      BASE_URL: http://localhost:3000
-    run: npm test
-```
+      - name: Run Tests
+        env:
+          NODE_ENV: test
+          JWT_SECRET: test-secret
+          BASE_URL: http://localhost:3000
+        run: npm test
