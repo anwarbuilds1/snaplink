@@ -41,7 +41,8 @@ jobs:
 
       - name: Run Tests
         env:
-          NODE_ENV: test
-          JWT_SECRET: test-secret
-          BASE_URL: http://localhost:3000
+  NODE_ENV: test
+  JWT_SECRET: test-secret
+  JWT_REFRESH_SECRET: test-refresh-secret
+  BASE_URL: http://localhost:3000
         run: npm test
