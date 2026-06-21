@@ -1,6 +1,8 @@
 services:
   mongo:
     image: mongo:6
+    container_name: short-url-mongo
+    restart: unless-stopped
     ports:
       - "27017:27017"
     volumes:
@@ -8,8 +10,26 @@ services:
 
   redis:
     image: redis:7-alpine
+    container_name: short-url-redis
+    restart: unless-stopped
     ports:
       - "6379:6379"
+
+  backend:
+    build:
+      context: ./backend
+    container_name: short-url-backend
+    restart: unless-stopped
+    depends_on:
+      - mongo
+      - redis
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./backend/.env
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/url-shortener
+      REDIS_URL: redis://redis:6379
 
 volumes:
   mongo-data:
