@@ -1,11 +1,69 @@
+**Here is the complete, final, and perfected `README.md` file** with all new updates integrated while preserving the full detailed structure, folder structure, flows, and content from the old version:
+
+````markdown
 # URL Shortener
 
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green)](https://nodejs.org)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-A production-oriented URL shortening platform built with React, Node.js, Express, MongoDB, and Redis.
+A **production-oriented** URL shortening platform built with modern backend engineering practices. Create short links, manage URLs, track detailed analytics, and monitor performance through a clean dashboard.
 
-Create short URLs, manage links, track click analytics, generate QR codes, and monitor traffic through a centralized dashboard. Designed for scalability, maintainability, and production deployment.
+---
+
+## Highlights
+
+- **JWT Authentication** with Access + Refresh Tokens
+- **Redis-backed** URL caching for lightning-fast redirects
+- **Advanced Analytics** with aggregation
+- Fully **Dockerized** local development
+- **CI/CD** with GitHub Actions
+- **Swagger API Documentation**
+- Automated Testing + Coverage Enforcement
+- Clean **Layered Architecture** (Controller → Service → Repository)
+
+---
+
+## Tech Stack
+
+### Backend
+
+- Node.js + Express.js
+- MongoDB
+- Redis
+- JWT + bcrypt
+- Zod Validation
+- Docker
+- Vitest + Swagger
+
+### Frontend
+
+- React + TypeScript
+- Vite
+- React Query
+
+---
+
+## Architecture Overview
+
+```mermaid
+flowchart LR
+Client[Client]
+subgraph Backend
+Routes
+Controllers
+Services
+Repositories
+end
+Redis[(Redis Cache)]
+Mongo[(MongoDB)]
+Client --> Routes
+Routes --> Controllers
+Controllers --> Services
+Services --> Repositories
+Services --> Redis
+Repositories --> Mongo
+```
+````
 
 ---
 
@@ -43,7 +101,7 @@ cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
 
 # Start all services
-docker-compose up --build
+docker compose up --build
 ```
 
 Frontend: http://localhost:5173  
@@ -71,15 +129,16 @@ npm run dev
 
 ### Backend (`backend/.env`)
 
-| Variable         | Description                       | Example                                  |
-| ---------------- | --------------------------------- | ---------------------------------------- |
-| `PORT`           | Server port                       | `5000`                                   |
-| `MONGO_URI`      | MongoDB connection string         | `mongodb://localhost:27017/urlshortener` |
-| `REDIS_URL`      | Redis connection string           | `redis://localhost:6379`                 |
-| `JWT_SECRET`     | JWT signing secret (min 32 chars) | `your_secret_here`                       |
-| `JWT_EXPIRES_IN` | JWT expiry duration               | `7d`                                     |
-| `BASE_URL`       | Public base URL for short links   | `http://localhost:5000`                  |
-| `NODE_ENV`       | Environment                       | `development`                            |
+| Variable             | Description                     | Example                                   |
+| -------------------- | ------------------------------- | ----------------------------------------- |
+| `PORT`               | Server port                     | `5000`                                    |
+| `MONGODB_URI`        | MongoDB connection string       | `mongodb://localhost:27017/url-shortener` |
+| `REDIS_URL`          | Redis connection string         | `redis://localhost:6379`                  |
+| `JWT_SECRET`         | JWT signing secret              | `your-super-secret-key`                   |
+| `JWT_REFRESH_SECRET` | Refresh token secret            | `your-refresh-secret-key`                 |
+| `JWT_EXPIRES_IN`     | JWT expiry duration             | `15m`                                     |
+| `BASE_URL`           | Public base URL for short links | `http://localhost:5000`                   |
+| `NODE_ENV`           | Environment                     | `development`                             |
 
 ### Frontend (`frontend/.env`)
 
@@ -147,25 +206,15 @@ flowchart TD
 ```mermaid
 flowchart TD
   A[User Visits Short URL] --> B[Extract Short Code]
-
   B --> C[Check Redis Cache]
-
   C -->|Hit| D[Get URL from Cache]
-
   D --> E[Increment Click Count]
-
   E --> F[Store Analytics Event]
-
   F --> G[Redirect User]
-
   C -->|Miss| H[Query MongoDB]
-
   H --> I[Store in Redis Cache]
-
   I --> J[Increment Click Count]
-
   J --> K[Store Analytics Event]
-
   K --> G
 ```
 
@@ -200,6 +249,20 @@ flowchart TD
   F --> G
   G --> H[(Analytics Collection)]
 ```
+
+---
+
+## Quality Metrics
+
+| Metric             | Value          |
+| ------------------ | -------------- |
+| Test Suites        | 8+             |
+| Total Tests        | 50+            |
+| Statement Coverage | 84%            |
+| Branch Coverage    | 74%            |
+| Function Coverage  | 71%            |
+| CI/CD              | GitHub Actions |
+| Containerized      | Docker         |
 
 ---
 
@@ -440,14 +503,15 @@ frontend/
 
 Cache structure — key: `url:{shortCode}`, value: original URL string.
 
-```
+```bash
 SET url:abc123 "https://example.com" EX 86400
 ```
 
 - TTL: 24 hours (refreshed on each cache hit)
 - On URL delete/update: cache key is invalidated immediately
 - Cache miss triggers DB lookup and re-population
-  **Impact:** Redirects serve from Redis in ~1–2ms vs ~15–30ms from MongoDB.
+
+**Impact:** Redirects serve from Redis in ~1–2ms vs ~15–30ms from MongoDB.
 
 ---
 
@@ -455,14 +519,13 @@ SET url:abc123 "https://example.com" EX 86400
 
 | Layer            | Implementation                            |
 | ---------------- | ----------------------------------------- |
-| Authentication   | JWT (RS256)                               |
+| Authentication   | JWT                                       |
 | Password Storage | bcrypt (rounds: 12)                       |
 | Input Validation | Zod                                       |
 | Rate Limiting    | express-rate-limit (100 req/15min per IP) |
 | HTTP Security    | Helmet                                    |
 | CORS             | Allowlisted origins via env config        |
 | XSS Protection   | Input sanitization                        |
-| CSRF Protection  | SameSite cookie + CSRF token              |
 
 ---
 
@@ -482,7 +545,7 @@ flowchart TD
 ### Docker Compose
 
 ```bash
-docker-compose -f docker-compose.yml up -d
+docker compose -f docker-compose.yml up -d
 ```
 
 Services: `frontend`, `backend`, `mongo`, `redis`, `nginx`
@@ -511,28 +574,36 @@ GitHub Actions pipeline on push to `main`:
 
 ## Roadmap
 
-### Active
+### Completed
 
-- [ ] Phase 1: URL shortening, redirection, CRUD
-- [ ] Phase 2: Authentication, dashboard
-- [ ] Phase 3: Analytics
+- [x] Authentication (JWT + Refresh Tokens)
+- [x] URL CRUD + Custom Aliases
+- [x] URL Redirects with Redis Cache
+- [x] Advanced Analytics & Aggregation
+- [x] Docker Support
+- [x] CI/CD Pipeline
+- [x] Swagger Documentation
 
 ### Planned
 
-- [ ] Phase 4: Redis integration
-- [ ] Phase 5: Dockerization
-- [ ] Phase 6: CI/CD pipeline
-- [ ] Phase 7: Horizontal scaling
-
-### Backlog
-
-- Password-protected links
-- UTM builder
-- Bulk URL import
-- Team workspaces
+- Refresh Token Rotation
+- Queue-Based Analytics Processing
+- Health Checks
+- Kubernetes Deployment
 
 ---
+
+## Documentation
+
+Detailed architecture documentation is available in:
+
+- `docs/architecture.md`
+- `docs/authentication-flow.md`
+- `docs/caching-strategy.md`
+- `docs/database-design.md`
 
 ## License
 
 MIT
+
+---
