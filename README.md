@@ -1,4 +1,3 @@
-````markdown
 # URL Shortener
 
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green)](https://nodejs.org)
