@@ -42,7 +42,7 @@ A **production-oriented** URL shortening platform built with modern backend engi
 
 ## Architecture Overview
 
-mermaid
+```mermaid
 flowchart LR
 Client[Client]
 subgraph Backend
@@ -59,7 +59,7 @@ Controllers --> Services
 Services --> Repositories
 Services --> Redis
 Repositories --> Mongo
-
+```
 
 ---
 
@@ -87,7 +87,7 @@ Repositories --> Mongo
 
 ### Local Development (Docker)
 
-bash
+```bash
 # Clone the repository
 git clone https://github.com/sayyed-anwar/url-shortener.git
 cd url-shortener
@@ -98,15 +98,16 @@ cp frontend/.env.example frontend/.env
 
 # Start all services
 docker compose up --build
+```
 
-Frontend: http://localhost:5173  
-Backend API: http://localhost:5000  
-MongoDB: localhost:27017  
+Frontend: http://localhost:5173
+Backend API: http://localhost:5000
+MongoDB: localhost:27017
 Redis: localhost:6379
 
 ### Manual Setup
 
-bash
+```bash
 # Backend
 cd backend
 npm install
@@ -116,6 +117,7 @@ npm run dev
 cd frontend
 npm install
 npm run dev
+```
 
 ---
 
@@ -160,16 +162,16 @@ npm run dev
 ### Advanced
 
 | Feature            | Description                                         |
-| ------------------ | --------------------------------------------------- |
+| ------------------ | ----------------------------------------------------- |
 | Authentication     | JWT-based auth with bcrypt password hashing         |
 | QR Code Generation | Generate QR codes for any short link                |
-| Redis Caching      | Sub-millisecond lookups for hot URLs                |
-| Rate Limiting      | Per-IP rate limiting via express-rate-limit         |
+| Redis Caching      | Sub-millisecond lookups for hot URLs                 |
+| Rate Limiting      | Per-IP rate limiting via express-rate-limit          |
 | Device Analytics   | Track device type per click                         |
-| Browser Analytics  | Track browser per click                             |
-| Geo Analytics      | Track country and city via IP geolocation           |
-| Docker Support     | Full containerized setup via Docker Compose         |
-| CI/CD Pipeline     | Automated testing and deployment via GitHub Actions |
+| Browser Analytics  | Track browser per click                              |
+| Geo Analytics      | Track country and city via IP geolocation            |
+| Docker Support     | Full containerized setup via Docker Compose          |
+| CI/CD Pipeline     | Automated testing and deployment via GitHub Actions  |
 
 ---
 
@@ -177,25 +179,27 @@ npm run dev
 
 ### High-Level
 
-mermaid
+```mermaid
 flowchart TD
   A[React Frontend] --> B[Nginx Reverse Proxy]
   B --> C[Express API Server]
   C --> D[(MongoDB)]
   C --> E[(Redis Cache)]
+```
 
 ### Backend Layers
 
-mermaid
+```mermaid
 flowchart TD
   A[Routes] --> B[Controllers]
   B --> C[Services]
   C --> D[Repositories]
   D --> E[(MongoDB)]
+```
 
 ### URL Redirection Flow
 
-mermaid
+```mermaid
 flowchart TD
   A[User Visits Short URL] --> B[Extract Short Code]
   B --> C[Check Redis Cache]
@@ -208,12 +212,13 @@ flowchart TD
   I --> J[Increment Click Count]
   J --> K[Store Analytics Event]
   K --> G
+```
 
 > **Note:** Analytics logging is handled asynchronously after the redirect response is sent. This keeps redirect latency minimal even under high traffic.
 
 ### URL Creation Flow
 
-mermaid
+```mermaid
 flowchart TD
   A[User Submits URL] --> B[Frontend Validation]
   B --> C[POST /api/urls]
@@ -223,10 +228,11 @@ flowchart TD
   F -->|Unique| G[Store in MongoDB]
   F -->|Collision| E
   G --> H[Return Short URL]
+```
 
 ### Analytics Collection Flow
 
-mermaid
+```mermaid
 flowchart TD
   A[Redirect Triggered] --> B[Capture Request Metadata]
   B --> C[Browser]
@@ -238,6 +244,7 @@ flowchart TD
   E --> G
   F --> G
   G --> H[(Analytics Collection)]
+```
 
 ---
 
@@ -257,7 +264,7 @@ flowchart TD
 
 ## Project Structure
 
-text
+```text
 url-shortener/
 ├── backend/
 ├── frontend/
@@ -267,10 +274,11 @@ url-shortener/
 ├── docker-compose.yml
 ├── README.md
 └── .gitignore
+```
 
 ### Backend
 
-text
+```text
 backend/
 ├── src/
 │   ├── config/
@@ -320,11 +328,11 @@ backend/
 ├── .gitignore
 ├── package-lock.json
 └── package.json
-
+```
 
 ### Frontend
 
-text
+```text
 frontend/
 │
 ├── public/
@@ -398,6 +406,7 @@ frontend/
 ├── tsconfig.node.json
 ├── vite.config.ts
 └── README.md
+```
 
 ---
 
@@ -405,7 +414,7 @@ frontend/
 
 ### Users
 
-json
+```json
 {
   "_id": "ObjectId",
   "name": "string",
@@ -413,10 +422,11 @@ json
   "password": "string (bcrypt hash)",
   "createdAt": "Date"
 }
+```
 
 ### URLs
 
-json
+```json
 {
   "_id": "ObjectId",
   "userId": "ObjectId (ref: Users)",
@@ -428,10 +438,11 @@ json
   "isActive": "boolean (default: true)",
   "createdAt": "Date"
 }
+```
 
 ### Analytics
 
-json
+```json
 {
   "_id": "ObjectId",
   "urlId": "ObjectId (ref: URLs, indexed)",
@@ -443,6 +454,7 @@ json
   "referrer": "string",
   "timestamp": "Date (TTL index: 90 days)"
 }
+```
 
 > **Indexes:** `urlId + timestamp` compound index for analytics queries. TTL index on `timestamp` for automatic data expiry. `shortCode` unique index with partial filter for active URLs.
 
@@ -453,7 +465,7 @@ json
 ### Authentication
 
 | Method | Endpoint             | Auth | Description        |
-| ------ | -------------------- | ---- | ------------------ |
+| ------ | --------------------- | ---- | ------------------ |
 | POST   | `/api/auth/register` | —    | Create account     |
 | POST   | `/api/auth/login`    | —    | Login, returns JWT |
 | GET    | `/api/auth/profile`  | ✓    | Get current user   |
@@ -461,7 +473,7 @@ json
 ### URL Management
 
 | Method | Endpoint        | Auth | Description                  |
-| ------ | --------------- | ---- | ---------------------------- |
+| ------ | --------------- | ---- | ----------------------------- |
 | POST   | `/api/urls`     | ✓    | Create short URL             |
 | GET    | `/api/urls`     | ✓    | List user's URLs (paginated) |
 | GET    | `/api/urls/:id` | ✓    | Get single URL               |
@@ -471,14 +483,14 @@ json
 ### Analytics
 
 | Method | Endpoint                   | Auth | Description                |
-| ------ | -------------------------- | ---- | -------------------------- |
+| ------ | --------------------------- | ---- | --------------------------- |
 | GET    | `/api/analytics/:urlId`    | ✓    | Per-link analytics         |
 | GET    | `/api/analytics/dashboard` | ✓    | Aggregated dashboard stats |
 
 ### Redirect
 
 | Method | Endpoint      | Auth | Description                        |
-| ------ | ------------- | ---- | ---------------------------------- |
+| ------ | -------------- | ---- | ------------------------------------ |
 | GET    | `/:shortCode` | —    | Redirect + async analytics capture |
 
 ---
@@ -487,8 +499,9 @@ json
 
 Cache structure — key: `url:{shortCode}`, value: original URL string.
 
-bash
+```bash
 SET url:abc123 "https://example.com" EX 86400
+```
 
 - TTL: 24 hours (refreshed on each cache hit)
 - On URL delete/update: cache key is invalidated immediately
@@ -501,7 +514,7 @@ SET url:abc123 "https://example.com" EX 86400
 ## Security
 
 | Layer            | Implementation                            |
-| ---------------- | ----------------------------------------- |
+| ----------------- | ------------------------------------------ |
 | Authentication   | JWT                                       |
 | Password Storage | bcrypt (rounds: 12)                       |
 | Input Validation | Zod                                       |
@@ -516,19 +529,20 @@ SET url:abc123 "https://example.com" EX 86400
 
 ### Production Architecture
 
-mermaid
+```mermaid
 flowchart TD
   A[Client] --> B[Nginx - SSL Termination + Static Files]
   B --> C[React Build - served by Nginx]
   B --> D[Express API - port 5000]
   D --> E[(Redis)]
   D --> F[(MongoDB)]
+```
 
 ### Docker Compose
 
-bash
+```bash
 docker compose -f docker-compose.yml up -d
-
+```
 
 Services: `frontend`, `backend`, `mongo`, `redis`, `nginx`
 
@@ -546,7 +560,7 @@ GitHub Actions pipeline on push to `main`:
 ## Scalability Notes
 
 | Concern                | Current Approach                          | At Scale                                 |
-| ---------------------- | ----------------------------------------- | ---------------------------------------- |
+| ----------------------- | ------------------------------------------ | ------------------------------------------ |
 | Short code collisions  | NanoID + unique index + retry             | Acceptable at current scale              |
 | High redirect traffic  | Redis caching layer                       | Add read replicas; consider CDN          |
 | Analytics write volume | Async post-redirect logging               | Move to queue (BullMQ/Kafka) at 10k+ rps |
