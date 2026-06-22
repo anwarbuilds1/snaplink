@@ -92,7 +92,7 @@ export const getProfile = async (userId) => {
 };
 
 export const refreshAccessToken = async (refreshToken) => {
-  const payload = verifyRefreshToken(refreshToken);
+  verifyRefreshToken(refreshToken);
 
   const user = await userRepository.findByRefreshToken(refreshToken);
 
@@ -104,8 +104,15 @@ export const refreshAccessToken = async (refreshToken) => {
     userId: user._id,
   });
 
+  const newRefreshToken = generateRefreshToken({
+    userId: user._id,
+  });
+
+  await userRepository.updateRefreshToken(user._id, newRefreshToken);
+
   return {
     accessToken,
+    refreshToken: newRefreshToken,
   };
 };
 
