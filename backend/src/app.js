@@ -13,6 +13,7 @@ import authRoutes from "./routes/auth.routes.js";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger.js";
 import logger from "./utils/logger.js";
+import systemRoutes from "./routes/system.routes.js";
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use(morgan("dev"));
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/health", healthRoutes);
+app.use("/system", systemRoutes);
 app.use("/api/v1/urls", urlRoute);
 app.use("/api/v1/analytics", analyticsRoutes);
 app.use("/api/v1/auth", authRoutes);
