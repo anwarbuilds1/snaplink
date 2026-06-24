@@ -39,5 +39,17 @@ const urlSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
+// User dashboard queries
+urlSchema.index({
+  userId: 1,
+  createdAt: -1,
+});
+
+// Expired URL cleanup queries
+urlSchema.index({
+  expiresAt: 1,
+});
+
 const Url = mongoose.model("Url", urlSchema);
+
 export default Url;

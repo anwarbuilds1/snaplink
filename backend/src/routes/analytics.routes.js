@@ -20,7 +20,8 @@ const router = Router();
  *       200:
  *         description: Dashboard statistics
  */
-router.get("/dashboard", getDashboardStats);
+router.get("/dashboard", authenticate, getDashboardStats);
+
 /**
  * @swagger
  * /api/v1/analytics/{urlId}:

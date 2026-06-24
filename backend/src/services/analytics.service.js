@@ -48,11 +48,11 @@ export const getUrlAnalytics = async (urlId, userId) => {
   };
 };
 
-export const getDashboardStats = async () => {
+export const getDashboardStats = async (userId) => {
   const [totalUrls, totalClicks, topUrl] = await Promise.all([
-    urlRepository.getTotalUrls(),
-    urlRepository.getTotalClicks(),
-    urlRepository.getTopUrl(),
+    urlRepository.getTotalUrlsByUser(userId),
+    urlRepository.getTotalClicksByUser(userId),
+    urlRepository.getTopUrlByUser(userId),
   ]);
 
   return {
