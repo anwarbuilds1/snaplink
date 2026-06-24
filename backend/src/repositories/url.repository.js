@@ -1,4 +1,5 @@
 import Url from "../models/Url.js";
+import mongoose from "mongoose";
 
 export const createUrl = async (data) => {
   return Url.create(data);
@@ -92,4 +93,38 @@ export const deleteManyUrls = async (ids) => {
       $in: ids,
     },
   });
+};
+
+export const getTotalUrlsByUser = async (userId) => {
+  return Url.countDocuments({ userId });
+};
+
+export const getTotalClicksByUser = async (userId) => {
+  const result = await Url.aggregate([
+    {
+      $match: {
+        userId: new mongoose.Types.ObjectId(userId),
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalClicks: {
+          $sum: "$clickCount",
+        },
+      },
+    },
+  ]);
+
+  return result[0]?.totalClicks || 0;
+};
+
+export const getTopUrlByUser = async (userId) => {
+  return Url.findOne({
+    userId,
+  })
+    .sort({
+      clickCount: -1,
+    })
+    .select("shortCode clickCount");
 };
