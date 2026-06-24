@@ -8,6 +8,9 @@ vi.mock("../../../src/repositories/analytics.repository.js", () => ({
 
 vi.mock("../../../src/repositories/url.repository.js", () => ({
   findById: vi.fn(),
+  getTotalUrlsByUser: vi.fn(),
+  getTotalClicksByUser: vi.fn(),
+  getTopUrlByUser: vi.fn(),
 }));
 
 vi.mock("../../../src/utils/extractDeviceInfo.js", () => ({
@@ -22,6 +25,7 @@ import { extractDeviceInfo } from "../../../src/utils/extractDeviceInfo.js";
 import {
   trackClick,
   getUrlAnalytics,
+  getDashboardStats,
 } from "../../../src/services/analytics.service.js";
 
 describe("trackClick", () => {
@@ -101,5 +105,49 @@ describe("getUrlAnalytics", () => {
     await expect(getUrlAnalytics("url123", "user123")).rejects.toThrow(
       "Forbidden",
     );
+  });
+});
+
+describe("getDashboardStats", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("should return dashboard statistics", async () => {
+    urlRepository.getTotalUrlsByUser.mockResolvedValue(5);
+
+    urlRepository.getTotalClicksByUser.mockResolvedValue(100);
+
+    urlRepository.getTopUrlByUser.mockResolvedValue({
+      shortCode: "abc123",
+      clickCount: 50,
+    });
+
+    const result = await getDashboardStats("user123");
+
+    expect(result).toEqual({
+      totalUrls: 5,
+      totalClicks: 100,
+      topUrl: {
+        shortCode: "abc123",
+        clicks: 50,
+      },
+    });
+  });
+
+  it("should return null topUrl when user has no urls", async () => {
+    urlRepository.getTotalUrlsByUser.mockResolvedValue(0);
+
+    urlRepository.getTotalClicksByUser.mockResolvedValue(0);
+
+    urlRepository.getTopUrlByUser.mockResolvedValue(null);
+
+    const result = await getDashboardStats("user123");
+
+    expect(result).toEqual({
+      totalUrls: 0,
+      totalClicks: 0,
+      topUrl: null,
+    });
   });
 });

@@ -19,7 +19,7 @@ export const getUrlAnalytics = async (req, res, next) => {
 
 export const getDashboardStats = async (req, res, next) => {
   try {
-    const stats = await analyticsService.getDashboardStats();
+    const stats = await analyticsService.getDashboardStats(req.user.userId);
 
     return res.status(200).json({
       success: true,

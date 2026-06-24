@@ -6,7 +6,6 @@ const analyticsSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Url",
       required: true,
-      index: true,
     },
     browser: {
       type: String,
@@ -29,5 +28,12 @@ const analyticsSchema = new mongoose.Schema(
   { versionKey: false },
 );
 
+// Analytics queries by URL sorted by time
+analyticsSchema.index({
+  urlId: 1,
+  clickedAt: -1,
+});
+
 const Analytics = mongoose.model("Analytics", analyticsSchema);
+
 export default Analytics;
