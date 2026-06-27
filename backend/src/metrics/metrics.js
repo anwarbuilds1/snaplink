@@ -1,4 +1,10 @@
-import client from "prom-client";
+import {
+  Registry,
+  collectDefaultMetrics,
+  Counter,
+  Histogram,
+  Gauge,
+} from "prom-client";
 
 const register = new client.Registry();
 
@@ -39,4 +45,4 @@ export const redisStatus = new client.Gauge({
   registers: [register],
 });
 
-export { register };
+export default register;
