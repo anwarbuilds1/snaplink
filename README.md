@@ -500,7 +500,9 @@ frontend/
   "name": "string",
   "email": "string (unique, indexed)",
   "password": "string (bcrypt hash)",
-  "createdAt": "Date"
+  "createdAt": "Date",
+  "updatedAt": "Date",
+  "refreshTokenHash": "string (hash)" 
 }
 ```
 
@@ -517,6 +519,7 @@ frontend/
   "clickCount": "number (default: 0)",
   "isActive": "boolean (default: true)",
   "createdAt": "Date"
+  "updatedAt": "Date",
 }
 ```
 
@@ -544,28 +547,31 @@ frontend/
 
 ### Authentication
 
-| Method | Endpoint             | Auth | Description        |
-| ------ | -------------------- | ---- | ------------------ |
-| POST   | `/api/auth/register` | —    | Create account     |
-| POST   | `/api/auth/login`    | —    | Login, returns JWT |
-| GET    | `/api/auth/profile`  | ✓    | Get current user   |
+| Method | Endpoint | Auth | Description |
+| ------ | -------- | ---- | ----------- |
+| POST | `/api/v1/auth/register` | — | Register a new user account |
+| POST | `/api/v1/auth/login` | — | Login and receive access & refresh tokens |
+| POST | `/api/v1/auth/refresh` | — | Generate a new access token using a refresh token |
+| POST | `/api/v1/auth/logout` | ✓ | Logout the authenticated user |
+| GET | `/api/v1/auth/profile` | ✓ | Retrieve the current user's profile |
+| GET | `/api/v1/auth/urls` | ✓ | Retrieve the authenticated user's URLs |
 
 ### URL Management
 
-| Method | Endpoint        | Auth | Description                  |
-| ------ | --------------- | ---- | ---------------------------- |
-| POST   | `/api/urls`     | ✓    | Create short URL             |
-| GET    | `/api/urls`     | ✓    | List user's URLs (paginated) |
-| GET    | `/api/urls/:id` | ✓    | Get single URL               |
-| PUT    | `/api/urls/:id` | ✓    | Update URL                   |
-| DELETE | `/api/urls/:id` | ✓    | Delete URL                   |
+| Method | Endpoint | Auth | Description |
+| ------ | -------- | ---- | ----------- |
+| POST | `/api/v1/urls` | ✓ | Create a new short URL |
+| GET | `/api/v1/urls/:id` | ✓ | Retrieve a URL by ID |
+| PATCH | `/api/v1/urls/:id` | ✓ | Update an existing URL |
+| DELETE | `/api/v1/urls/:id` | ✓ | Delete a URL |
+| GET | `/api/v1/urls/:id/qr` | ✓ | Generate a QR code for a short URL |
 
 ### Analytics
 
-| Method | Endpoint                   | Auth | Description                |
-| ------ | -------------------------- | ---- | -------------------------- |
-| GET    | `/api/analytics/:urlId`    | ✓    | Per-link analytics         |
-| GET    | `/api/analytics/dashboard` | ✓    | Aggregated dashboard stats |
+| Method | Endpoint | Auth | Description |
+| ------ | -------- | ---- | ----------- |
+| GET | `/api/v1/analytics/dashboard` | ✓ | Retrieve aggregated dashboard statistics |
+| GET | `/api/v1/analytics/:urlId` | ✓ | Retrieve analytics for a specific URL |
 
 ### Redirect
 
@@ -593,15 +599,18 @@ SET url:abc123 "https://example.com" EX 86400
 
 ## Security
 
-| Layer            | Implementation                            |
-| ---------------- | ----------------------------------------- |
-| Authentication   | JWT                                       |
-| Password Storage | bcrypt (rounds: 12)                       |
-| Input Validation | Zod                                       |
-| Rate Limiting    | express-rate-limit (100 req/15min per IP) |
-| HTTP Security    | Helmet                                    |
-| CORS             | Allowlisted origins via env config        |
-| XSS Protection   | Input sanitization                        |
+| Layer | Implementation |
+|-------|----------------|
+| Authentication | JWT Access & Refresh Tokens |
+| Session Security | Refresh Token Rotation with Hashed Token Storage |
+| Authorization | Protected Routes via Authentication Middleware |
+| Password Storage | bcrypt (12 Salt Rounds) |
+| Input Validation | Zod Schema Validation |
+| Rate Limiting | express-rate-limit (100 requests / 15 min per IP) |
+| HTTP Security | Helmet Security Headers |
+| CORS | Configurable Allowlisted Origins |
+| Request Tracking | Correlation IDs for Request Tracing |
+| Environment Validation | Startup Validation for Required Environment Variables |
 
 ---
 
