@@ -1,9 +1,10 @@
 import { createClient } from "redis";
 import { env } from "./env.js";
 import logger from "../utils/logger.js";
-import redisStatus from "../metrics/metrics.js";
+import { redisStatus } from "../metrics/metrics.js";
 
 export let isRedisConnected = false;
+
 const redisClient = createClient({
   url: env.REDIS_URL,
 });
@@ -46,6 +47,25 @@ export const connectRedis = async () => {
 
     logger.error({
       event: "REDIS_CONNECTION_FAILED",
+      message: error.message,
+    });
+
+    throw error;
+  }
+};
+
+export const disconnectRedis = async () => {
+  try {
+    if (redisClient.isOpen) {
+      await redisClient.quit();
+
+      logger.info({
+        event: "REDIS_DISCONNECTED_GRACEFULLY",
+      });
+    }
+  } catch (error) {
+    logger.error({
+      event: "REDIS_DISCONNECT_FAILED",
       message: error.message,
     });
 
