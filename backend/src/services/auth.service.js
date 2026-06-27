@@ -6,6 +6,7 @@ import {
   generateRefreshToken,
   verifyRefreshToken,
 } from "../utils/jwt.js";
+import { hashToken } from "../utils/hashToken.js";
 
 export const register = async ({ name, email, password }) => {
   const existingUser = await userRepository.findByEmail(email);
@@ -30,7 +31,9 @@ export const register = async ({ name, email, password }) => {
     userId: user._id,
   });
 
-  await userRepository.updateRefreshToken(user._id, refreshToken);
+  const refreshTokenHash = hashToken(refreshToken);
+
+  await userRepository.updateRefreshToken(user._id, refreshTokenHash);
 
   return {
     user: {
@@ -64,7 +67,9 @@ export const login = async ({ email, password }) => {
     userId: user._id,
   });
 
-  await userRepository.updateRefreshToken(user._id, refreshToken);
+  const refreshTokenHash = hashToken(refreshToken);
+
+  await userRepository.updateRefreshToken(user._id, refreshTokenHash);
 
   return {
     user: {
@@ -94,7 +99,9 @@ export const getProfile = async (userId) => {
 export const refreshAccessToken = async (refreshToken) => {
   verifyRefreshToken(refreshToken);
 
-  const user = await userRepository.findByRefreshToken(refreshToken);
+  const refreshTokenHash = hashToken(refreshToken);
+
+  const user = await userRepository.findByRefreshToken(refreshTokenHash);
 
   if (!user) {
     throw new AppError("Invalid refresh token", 401);
@@ -108,7 +115,9 @@ export const refreshAccessToken = async (refreshToken) => {
     userId: user._id,
   });
 
-  await userRepository.updateRefreshToken(user._id, newRefreshToken);
+  const newRefreshTokenHash = hashToken(newRefreshToken);
+
+  await userRepository.updateRefreshToken(user._id, newRefreshTokenHash);
 
   return {
     accessToken,
