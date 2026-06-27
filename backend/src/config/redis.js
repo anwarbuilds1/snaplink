@@ -54,4 +54,23 @@ export const connectRedis = async () => {
   }
 };
 
+export const disconnectRedis = async () => {
+  try {
+    if (redisClient.isOpen) {
+      await redisClient.quit();
+
+      logger.info({
+        event: "REDIS_DISCONNECTED_GRACEFULLY",
+      });
+    }
+  } catch (error) {
+    logger.error({
+      event: "REDIS_DISCONNECT_FAILED",
+      message: error.message,
+    });
+
+    throw error;
+  }
+};
+
 export default redisClient;
