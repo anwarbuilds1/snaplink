@@ -50,3 +50,20 @@ export const connectDB = async () => {
     process.exit(1);
   }
 };
+
+export const disconnectDB = async () => {
+  try {
+    await mongoose.connection.close();
+
+    logger.info({
+      event: "DATABASE_DISCONNECTED_GRACEFULLY",
+    });
+  } catch (error) {
+    logger.error({
+      event: "DATABASE_DISCONNECT_FAILED",
+      message: error.message,
+    });
+
+    throw error;
+  }
+};

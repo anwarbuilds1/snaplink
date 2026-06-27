@@ -4,13 +4,12 @@ import { connectDB } from "./config/database.js";
 import { connectRedis } from "./config/redis.js";
 import logger from "./utils/logger.js";
 import { startJobs } from "./jobs/index.js";
+import { registerGracefulShutdown } from "./utils/gracefulShutdown.js";
 
 const startServer = async () => {
   try {
-    // Connect MongoDB
     await connectDB();
 
-    // Connect Redis (optional dependency)
     try {
       await connectRedis();
     } catch {
@@ -20,17 +19,17 @@ const startServer = async () => {
       });
     }
 
-    // Start background jobs
     startJobs();
 
-    // Start HTTP server
-    app.listen(env.PORT, () => {
+    const server = app.listen(env.PORT, () => {
       logger.info({
         event: "SERVER_STARTED",
         port: env.PORT,
         environment: env.NODE_ENV,
       });
     });
+
+    registerGracefulShutdown(server);
   } catch (error) {
     logger.error({
       event: "SERVER_STARTUP_FAILED",
