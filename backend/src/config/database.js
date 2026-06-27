@@ -34,7 +34,6 @@ mongoose.connection.on("error", (error) => {
   });
 });
 
-export let isDatabaseConnected = false;
 export const connectDB = async () => {
   if (!env.MONGODB_URI) {
     throw new Error("MONGODB_URI is not set");
