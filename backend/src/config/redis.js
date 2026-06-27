@@ -1,9 +1,7 @@
 import { createClient } from "redis";
 import { env } from "./env.js";
 import logger from "../utils/logger.js";
-import { redisStatus } from "../metrics/metrics.js";
-
-export let isRedisConnected = false;
+import redisStatus from "../metrics/metrics.js";
 
 export let isRedisConnected = false;
 const redisClient = createClient({
