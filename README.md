@@ -501,7 +501,7 @@ frontend/
   "email": "string (unique, indexed)",
   "password": "string (bcrypt hash)",
   "createdAt": "Date",
-  "updatedAt: "Date",
+  "updatedAt": "Date",
   "refreshTokenHash": "string (hash)" 
 }
 ```
@@ -519,7 +519,7 @@ frontend/
   "clickCount": "number (default: 0)",
   "isActive": "boolean (default: true)",
   "createdAt": "Date"
-  "updatedAt: "Date",
+  "updatedAt": "Date",
 }
 ```
 
