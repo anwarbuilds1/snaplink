@@ -5,6 +5,7 @@ import { redisStatus } from "../metrics/metrics.js";
 
 export let isRedisConnected = false;
 
+export let isRedisConnected = false;
 const redisClient = createClient({
   url: env.REDIS_URL,
 });
