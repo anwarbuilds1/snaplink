@@ -14,6 +14,8 @@ import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger.js";
 import logger from "./utils/logger.js";
 import systemRoutes from "./routes/system.routes.js";
+import { metricsMiddleware } from "./middlewares/metrics.middleware.js";
+import metricsRoutes from "./routes/metrics.routes.js";
 
 const app = express();
 
@@ -21,6 +23,7 @@ app.use(express.json());
 app.use(cors());
 app.use(helmet());
 app.use(requestId);
+app.use(metricsMiddleware);
 app.use((req, _res, next) => {
   logger.info({
     requestId: req.requestId,
@@ -35,6 +38,7 @@ app.use(morgan("dev"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/health", healthRoutes);
 app.use("/system", systemRoutes);
+app.use("/api/v1/metrics", metricsRoutes);
 app.use("/api/v1/urls", urlRoute);
 app.use("/api/v1/analytics", analyticsRoutes);
 app.use("/api/v1/auth", authRoutes);
