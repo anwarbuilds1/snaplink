@@ -2,6 +2,11 @@
 
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green)](https://nodejs.org)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+![CI](...)
+![Coverage](...)
+![Docker](...)
+![MongoDB](...)
+![Redis](...)
 
 A **production-oriented** URL shortening platform built with modern backend engineering practices. Create short links, manage URLs, track detailed analytics, and monitor performance through a clean dashboard.
 
@@ -37,6 +42,23 @@ A **production-oriented** URL shortening platform built with modern backend engi
 - React + TypeScript
 - Vite
 - React Query
+
+---
+
+## Production Features
+
+- JWT Authentication
+- Refresh Token Rotation
+- RBAC
+- Redis Caching
+- Prometheus Metrics
+- Health Checks
+- Readiness Checks
+- Graceful Shutdown
+- Docker
+- GitHub Actions
+- Unit Tests
+- Integration Tests
 
 ---
 
@@ -162,16 +184,16 @@ npm run dev
 ### Advanced
 
 | Feature            | Description                                         |
-| ------------------ | ----------------------------------------------------- |
+| ------------------ | --------------------------------------------------- |
 | Authentication     | JWT-based auth with bcrypt password hashing         |
 | QR Code Generation | Generate QR codes for any short link                |
-| Redis Caching      | Sub-millisecond lookups for hot URLs                 |
-| Rate Limiting      | Per-IP rate limiting via express-rate-limit          |
+| Redis Caching      | Sub-millisecond lookups for hot URLs                |
+| Rate Limiting      | Per-IP rate limiting via express-rate-limit         |
 | Device Analytics   | Track device type per click                         |
-| Browser Analytics  | Track browser per click                              |
-| Geo Analytics      | Track country and city via IP geolocation            |
-| Docker Support     | Full containerized setup via Docker Compose          |
-| CI/CD Pipeline     | Automated testing and deployment via GitHub Actions  |
+| Browser Analytics  | Track browser per click                             |
+| Geo Analytics      | Track country and city via IP geolocation           |
+| Docker Support     | Full containerized setup via Docker Compose         |
+| CI/CD Pipeline     | Automated testing and deployment via GitHub Actions |
 
 ---
 
@@ -195,6 +217,24 @@ flowchart TD
   B --> C[Services]
   C --> D[Repositories]
   D --> E[(MongoDB)]
+```
+
+### Authentication Flow
+
+```mermaid
+flowchart TD
+    A[User Registration] --> B[User Login]
+    B --> C[Generate Access Token]
+    C --> D[Generate Refresh Token]
+    D --> E[Access Protected Resources]
+
+    E -->|Access Token Expired| F[Refresh Token Endpoint]
+    F -->|Valid Refresh Token| G[Issue New Access Token]
+    G --> E
+
+    E --> H[User Logout]
+    H --> I[Invalidate Refresh Token]
+    I --> J[Session Terminated]
 ```
 
 ### URL Redirection Flow
@@ -259,6 +299,38 @@ flowchart TD
 | Function Coverage  | 71%            |
 | CI/CD              | GitHub Actions |
 | Containerized      | Docker         |
+
+---
+
+### Observability Flow
+
+```mermaid
+flowchart TD
+    A[Client]
+    B[Express Server]
+    C[Metrics Middleware]
+    D[Prometheus]
+    E[Grafana]
+
+    A -->|HTTP Request| B
+    B --> C
+    C -->|Expose /metrics| D
+    D -->|Visualize Metrics| E
+```
+
+---
+
+### Deployment Flow
+
+```mermaid
+flowchart TD
+    A[Developer Push] --> B[GitHub Repository]
+    B --> C[GitHub Actions]
+    C --> D[Run Tests]
+    D --> E[Generate Coverage Report]
+    E --> F[Build Docker Image]
+    F --> G[Deploy Application]
+```
 
 ---
 
@@ -465,7 +537,7 @@ frontend/
 ### Authentication
 
 | Method | Endpoint             | Auth | Description        |
-| ------ | --------------------- | ---- | ------------------ |
+| ------ | -------------------- | ---- | ------------------ |
 | POST   | `/api/auth/register` | —    | Create account     |
 | POST   | `/api/auth/login`    | —    | Login, returns JWT |
 | GET    | `/api/auth/profile`  | ✓    | Get current user   |
@@ -473,7 +545,7 @@ frontend/
 ### URL Management
 
 | Method | Endpoint        | Auth | Description                  |
-| ------ | --------------- | ---- | ----------------------------- |
+| ------ | --------------- | ---- | ---------------------------- |
 | POST   | `/api/urls`     | ✓    | Create short URL             |
 | GET    | `/api/urls`     | ✓    | List user's URLs (paginated) |
 | GET    | `/api/urls/:id` | ✓    | Get single URL               |
@@ -483,14 +555,14 @@ frontend/
 ### Analytics
 
 | Method | Endpoint                   | Auth | Description                |
-| ------ | --------------------------- | ---- | --------------------------- |
+| ------ | -------------------------- | ---- | -------------------------- |
 | GET    | `/api/analytics/:urlId`    | ✓    | Per-link analytics         |
 | GET    | `/api/analytics/dashboard` | ✓    | Aggregated dashboard stats |
 
 ### Redirect
 
 | Method | Endpoint      | Auth | Description                        |
-| ------ | -------------- | ---- | ------------------------------------ |
+| ------ | ------------- | ---- | ---------------------------------- |
 | GET    | `/:shortCode` | —    | Redirect + async analytics capture |
 
 ---
@@ -514,7 +586,7 @@ SET url:abc123 "https://example.com" EX 86400
 ## Security
 
 | Layer            | Implementation                            |
-| ----------------- | ------------------------------------------ |
+| ---------------- | ----------------------------------------- |
 | Authentication   | JWT                                       |
 | Password Storage | bcrypt (rounds: 12)                       |
 | Input Validation | Zod                                       |
@@ -560,7 +632,7 @@ GitHub Actions pipeline on push to `main`:
 ## Scalability Notes
 
 | Concern                | Current Approach                          | At Scale                                 |
-| ----------------------- | ------------------------------------------ | ------------------------------------------ |
+| ---------------------- | ----------------------------------------- | ---------------------------------------- |
 | Short code collisions  | NanoID + unique index + retry             | Acceptable at current scale              |
 | High redirect traffic  | Redis caching layer                       | Add read replicas; consider CDN          |
 | Analytics write volume | Async post-redirect logging               | Move to queue (BullMQ/Kafka) at 10k+ rps |
@@ -568,24 +640,48 @@ GitHub Actions pipeline on push to `main`:
 
 ---
 
+## Observability
+
+✔ Prometheus
+
+✔ Health
+
+✔ Readiness
+
+✔ Structured Logging
+
+✔ Request IDs
+
+✔ Graceful Shutdown
+
+✔ Metrics Endpoint
+
+---
+
 ## Roadmap
 
 ### Completed
 
-- [x] Authentication (JWT + Refresh Tokens)
-- [x] URL CRUD + Custom Aliases
-- [x] URL Redirects with Redis Cache
-- [x] Advanced Analytics & Aggregation
-- [x] Docker Support
-- [x] CI/CD Pipeline
+- [x] JWT Authentication
+- [x] Refresh Token Rotation
+- [x] URL CRUD
+- [x] Redis Cache
+- [x] Analytics Dashboard
+- [x] Health & Readiness Endpoints
+- [x] Prometheus Metrics
+- [x] Graceful Shutdown
+- [x] Docker
+- [x] GitHub Actions CI
 - [x] Swagger Documentation
+- [x] Unit & Integration Tests
 
-### Planned
+### Future
 
-- Refresh Token Rotation
-- Queue-Based Analytics Processing
-- Health Checks
-- Kubernetes Deployment
+- [ ] Queue-based Analytics (BullMQ)
+- [ ] Distributed Rate Limiting
+- [ ] OpenTelemetry Tracing
+- [ ] Kubernetes Deployment
+- [ ] Multi-region Cache
 
 ---
 
