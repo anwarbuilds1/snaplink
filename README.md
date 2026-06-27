@@ -45,6 +45,23 @@ A **production-oriented** URL shortening platform built with modern backend engi
 
 ---
 
+## Production Features
+
+- JWT Authentication
+- Refresh Token Rotation
+- RBAC
+- Redis Caching
+- Prometheus Metrics
+- Health Checks
+- Readiness Checks
+- Graceful Shutdown
+- Docker
+- GitHub Actions
+- Unit Tests
+- Integration Tests
+
+---
+
 ## Architecture Overview
 
 ```mermaid
@@ -202,6 +219,24 @@ flowchart TD
   D --> E[(MongoDB)]
 ```
 
+### Authentication Flow
+
+```mermaid
+flowchart TD
+    A[User Registration] --> B[User Login]
+    B --> C[Generate Access Token]
+    C --> D[Generate Refresh Token]
+    D --> E[Access Protected Resources]
+
+    E -->|Access Token Expired| F[Refresh Token Endpoint]
+    F -->|Valid Refresh Token| G[Issue New Access Token]
+    G --> E
+
+    E --> H[User Logout]
+    H --> I[Invalidate Refresh Token]
+    I --> J[Session Terminated]
+```
+
 ### URL Redirection Flow
 
 ```mermaid
@@ -264,6 +299,38 @@ flowchart TD
 | Function Coverage  | 71%            |
 | CI/CD              | GitHub Actions |
 | Containerized      | Docker         |
+
+---
+
+### Observability Flow
+
+```mermaid
+flowchart TD
+    A[Client]
+    B[Express Server]
+    C[Metrics Middleware]
+    D[Prometheus]
+    E[Grafana]
+
+    A -->|HTTP Request| B
+    B --> C
+    C -->|Expose /metrics| D
+    D -->|Visualize Metrics| E
+```
+
+---
+
+### Deployment Flow
+
+```mermaid
+flowchart TD
+    A[Developer Push] --> B[GitHub Repository]
+    B --> C[GitHub Actions]
+    C --> D[Run Tests]
+    D --> E[Generate Coverage Report]
+    E --> F[Build Docker Image]
+    F --> G[Deploy Application]
+```
 
 ---
 
@@ -570,6 +637,24 @@ GitHub Actions pipeline on push to `main`:
 | High redirect traffic  | Redis caching layer                       | Add read replicas; consider CDN          |
 | Analytics write volume | Async post-redirect logging               | Move to queue (BullMQ/Kafka) at 10k+ rps |
 | MongoDB growth         | Separate analytics collection + TTL index | Horizontal sharding on `urlId`           |
+
+---
+
+## Observability
+
+✔ Prometheus
+
+✔ Health
+
+✔ Readiness
+
+✔ Structured Logging
+
+✔ Request IDs
+
+✔ Graceful Shutdown
+
+✔ Metrics Endpoint
 
 ---
 
