@@ -1,7 +1,11 @@
 export const ROUTES = {
-  home: "/",
-  login: "/login",
-  register: "/register",
-  dashboard: "/dashboard",
-  analytics: "/analytics",
+  HOME: "/",
+  LOGIN: "/login",
+  REGISTER: "/register",
+  DASHBOARD: "/dashboard",
+  URLS: "/urls",
+  ANALYTICS: "/analytics",
+  PROFILE: "/profile",
+  SETTINGS: "/settings",
+  NOT_FOUND: "/404",
 };
