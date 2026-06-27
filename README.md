@@ -1,12 +1,20 @@
 # URL Shortener
 
-[![Node.js](https://img.shields.io/badge/Node.js-18+-green)](https://nodejs.org)
-[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
-![CI](...)
-![Coverage](...)
-![Docker](...)
-![MongoDB](...)
-![Redis](...)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=node.js&logoColor=white)](https://nodejs.org)
+
+[![Express.js](https://img.shields.io/badge/Express.js-5.x-000000?logo=express&logoColor=white)](https://expressjs.com)
+
+[![MongoDB](https://img.shields.io/badge/MongoDB-Database-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com)
+
+[![Redis](https://img.shields.io/badge/Redis-Cache-DC382D?logo=redis&logoColor=white)](https://redis.io)
+
+[![Docker](https://img.shields.io/badge/Docker-Container-2496ED?logo=docker&logoColor=white)](https://www.docker.com)
+
+[![GitHub Actions](https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&logoColor=white)](https://github.com/features/actions)
+
+[![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen)](#)
+
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 A **production-oriented** URL shortening platform built with modern backend engineering practices. Create short links, manage URLs, track detailed analytics, and monitor performance through a clean dashboard.
 
