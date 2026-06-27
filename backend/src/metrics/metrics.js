@@ -6,16 +6,16 @@ import {
   Gauge,
 } from "prom-client";
 
-const register = new client.Registry();
+const register = new Registry();
 
 // Collect default Node.js metrics
-client.collectDefaultMetrics({
+collectDefaultMetrics({
   register,
   prefix: "url_shortener_",
 });
 
 // Counter - Total HTTP Requests
-export const httpRequestsTotal = new client.Counter({
+export const httpRequestsTotal = new Counter({
   name: "http_requests_total",
   help: "Total number of HTTP requests",
   labelNames: ["method", "route", "status_code"],
@@ -23,7 +23,7 @@ export const httpRequestsTotal = new client.Counter({
 });
 
 // Histogram - Request Duration
-export const httpRequestDuration = new client.Histogram({
+export const httpRequestDuration = new Histogram({
   name: "http_request_duration_seconds",
   help: "Duration of HTTP requests in seconds",
   labelNames: ["method", "route", "status_code"],
@@ -32,14 +32,14 @@ export const httpRequestDuration = new client.Histogram({
 });
 
 // MongoDB Connection Status
-export const mongoStatus = new client.Gauge({
+export const mongoStatus = new Gauge({
   name: "mongodb_up",
   help: "MongoDB connection status",
   registers: [register],
 });
 
 // Redis Connection Status
-export const redisStatus = new client.Gauge({
+export const redisStatus = new Gauge({
   name: "redis_up",
   help: "Redis connection status",
   registers: [register],
