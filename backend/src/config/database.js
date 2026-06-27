@@ -34,7 +34,6 @@ mongoose.connection.on("error", (error) => {
   });
 });
 
-export let isDatabaseConnected = false;
 
 // MongoDB Connection Events
 mongoose.connection.on("connected", () => {
