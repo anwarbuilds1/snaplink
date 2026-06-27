@@ -32,6 +32,7 @@ import {
   login,
   getProfile,
 } from "../../../src/services/auth.service.js";
+import { hashToken } from "../../../src/utils/hashToken.js";
 
 describe("register", () => {
   beforeEach(() => {
@@ -94,7 +95,7 @@ describe("register", () => {
 
     expect(userRepository.updateRefreshToken).toHaveBeenCalledWith(
       "123",
-      "refresh-token",
+      hashToken("refresh-token"),
     );
 
     expect(result).toEqual({
@@ -180,7 +181,7 @@ describe("login", () => {
 
     expect(userRepository.updateRefreshToken).toHaveBeenCalledWith(
       "123",
-      "refresh-token",
+      hashToken("refresh-token"),
     );
 
     expect(result).toEqual({

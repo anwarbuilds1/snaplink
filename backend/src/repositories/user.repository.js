@@ -12,11 +12,11 @@ export const findById = async (id) => {
   return User.findById(id);
 };
 
-export const updateRefreshToken = async (userId, refreshToken) => {
+export const updateRefreshToken = async (userId, refreshTokenHash) => {
   return User.findByIdAndUpdate(
     userId,
     {
-      refreshToken,
+      refreshTokenHash,
     },
     {
       returnDocument: "after",
@@ -24,17 +24,17 @@ export const updateRefreshToken = async (userId, refreshToken) => {
   );
 };
 
-export const findByRefreshToken = async (refreshToken) => {
+export const findByRefreshToken = async (refreshTokenHash) => {
   return User.findOne({
-    refreshToken,
-  }).select("+refreshToken");
+    refreshTokenHash,
+  }).select("+refreshTokenHash");
 };
 
 export const clearRefreshToken = async (userId) => {
   return User.findByIdAndUpdate(
     userId,
     {
-      refreshToken: null,
+      refreshTokenHash: null,
     },
     {
       returnDocument: "after",
