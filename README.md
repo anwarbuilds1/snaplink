@@ -1,4 +1,4 @@
-# URL Shortener
+# SnapLink
 
 [![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 
