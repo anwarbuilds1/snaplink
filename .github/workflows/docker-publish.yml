@@ -1,0 +1,51 @@
+name: Build & Publish Docker Images
+
+on:
+  workflow_run:
+    workflows:
+      - Continuous Integration
+    branches:
+      - main
+    types:
+      - completed
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push Backend
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          push: true
+          tags: |
+            ghcr.io/anwarbuilds1/snaplink-backend:latest
+            ghcr.io/anwarbuilds1/snaplink-backend:${{ github.sha }}
+
+      - name: Build & Push Frontend
+        uses: docker/build-push-action@v6
+        with:
+          context: ./frontend
+          push: true
+          build-args: |
+            VITE_API_URL=https://snaplink.anwarbuilds.com/api/v1
+            VITE_SHORT_BASE_URL=https://snaplink.anwarbuilds.com
+          tags: |
+            ghcr.io/anwarbuilds1/snaplink-frontend:latest
+            ghcr.io/anwarbuilds1/snaplink-frontend:${{ github.sha }}

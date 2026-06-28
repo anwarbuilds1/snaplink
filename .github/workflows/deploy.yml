@@ -2,7 +2,8 @@ name: Deploy Production
 
 on:
   workflow_run:
-    workflows: ["Continuous Integration"]
+    workflows:
+      - Build & Publish Docker Images
     branches:
       - main
     types:
@@ -31,17 +32,25 @@ jobs:
             git fetch origin
             git reset --hard origin/main
 
-            echo "Rebuilding containers..."
-            docker compose up -d --build --remove-orphans
+            echo "Logging into GHCR..."
+            echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io \
+              -u "${{ github.actor }}" \
+              --password-stdin
 
-            echo "Cleaning Docker..."
+            echo "Pulling latest images..."
+            docker compose pull
+
+            echo "Restarting containers..."
+            docker compose up -d --remove-orphans
+
+            echo "Cleaning old images..."
             docker image prune -af
             docker builder prune -af
 
-            echo "Waiting..."
-            sleep 10
+            echo "Waiting for services..."
+            sleep 15
 
-            echo "Health Check..."
+            echo "Running health check..."
             curl --fail http://localhost:5000/system/health
 
             echo "Deployment Successful 🚀"

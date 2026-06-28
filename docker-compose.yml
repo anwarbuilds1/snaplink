@@ -4,8 +4,8 @@ services:
     container_name: snaplink-mongo
     restart: unless-stopped
 
-    ports:
-      - "27017:27017"
+    expose:
+      - "27017"
 
     volumes:
       - snaplink-mongo-data:/data/db
@@ -26,8 +26,8 @@ services:
     container_name: snaplink-redis
     restart: unless-stopped
 
-    ports:
-      - "6379:6379"
+    expose:
+      - "6379"
 
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
@@ -40,9 +40,7 @@ services:
       - snaplink-network
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: ghcr.io/anwarbuilds1/snaplink-backend:latest
 
     container_name: snaplink-backend
 
@@ -63,7 +61,7 @@ services:
       REDIS_URL: redis://redis:6379
 
     ports:
-      - "5000:5000"
+      - "127.0.0.1:5000:5000"
 
     healthcheck:
       test:
@@ -83,9 +81,7 @@ services:
       - snaplink-network
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: ghcr.io/anwarbuilds1/snaplink-frontend:latest
 
     container_name: snaplink-frontend
 
@@ -96,7 +92,7 @@ services:
         condition: service_healthy
 
     ports:
-      - "5173:80"
+      - "127.0.0.1:5173:80"
 
     networks:
       - snaplink-network
