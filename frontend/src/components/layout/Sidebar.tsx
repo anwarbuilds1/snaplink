@@ -1,5 +1,13 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Link2, BarChart3, User, Settings, LogOut, Link } from "lucide-react";
+import {
+  LayoutDashboard,
+  Link2,
+  BarChart3,
+  User,
+  Settings,
+  LogOut,
+  Link,
+} from "lucide-react";
 import { ROUTES } from "../../constants/routes";
 import { useAuth } from "../../hooks/useAuth";
 
@@ -26,7 +34,7 @@ export const Sidebar = ({ onClose }: SidebarProps) => {
           <Link size={18} />
         </div>
         <span className="font-bold text-slate-900 dark:text-white tracking-tight text-lg">
-          Anwar Builds <span className="text-brand-600 font-extrabold"></span>
+          SnapLink <span className="text-brand-600 font-extrabold"></span>
         </span>
       </div>
 
@@ -38,9 +46,10 @@ export const Sidebar = ({ onClose }: SidebarProps) => {
             to={item.path}
             onClick={onClose}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors cursor-pointer ${isActive
-                ? "bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400"
-                : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200"
+              `flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors cursor-pointer ${
+                isActive
+                  ? "bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400"
+                  : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200"
               }`
             }
           >

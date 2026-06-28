@@ -1,5 +1,12 @@
 import { Link } from "react-router-dom";
-import { Link2, ArrowRight, Activity, ShieldCheck, QrCode, Sparkles } from "lucide-react";
+import {
+  Link2,
+  ArrowRight,
+  Activity,
+  ShieldCheck,
+  QrCode,
+  Sparkles,
+} from "lucide-react";
 import { ROUTES } from "../../constants/routes";
 import { useAuth } from "../../hooks/useAuth";
 
@@ -15,7 +22,7 @@ function Home() {
             <Link2 size={18} />
           </div>
           <span className="font-bold tracking-tight text-lg">
-            Anwar Builds <span className="text-brand-600 font-extrabold"></span>
+            SnapLink <span className="text-brand-600 font-extrabold"></span>
           </span>
         </div>
         <div className="flex items-center gap-4">
@@ -59,8 +66,9 @@ function Home() {
         </h1>
 
         <p className="text-base sm:text-lg text-slate-600 dark:text-slate-400 max-w-2xl leading-relaxed">
-          Create custom, lightning-fast short codes backed by Redis caching. Track click performance with real-time
-          browser, device, and operating system analytics.
+          Create custom, lightning-fast short codes backed by Redis caching.
+          Track click performance with real-time browser, device, and operating
+          system analytics.
         </p>
 
         <div className="flex gap-4 mt-4">
@@ -79,9 +87,12 @@ function Home() {
             <div className="h-10 w-10 rounded-lg bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 flex items-center justify-center">
               <Activity size={20} />
             </div>
-            <h3 className="font-semibold text-slate-900 dark:text-white">Real-time Analytics</h3>
+            <h3 className="font-semibold text-slate-900 dark:text-white">
+              Real-time Analytics
+            </h3>
             <p className="text-sm text-slate-500 dark:text-slate-400 leading-normal">
-              Monitor browser, operating system, and geolocation aggregations to gain deep insights into your audience.
+              Monitor browser, operating system, and geolocation aggregations to
+              gain deep insights into your audience.
             </p>
           </div>
 
@@ -89,9 +100,12 @@ function Home() {
             <div className="h-10 w-10 rounded-lg bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 flex items-center justify-center">
               <QrCode size={20} />
             </div>
-            <h3 className="font-semibold text-slate-900 dark:text-white">QR Code Generation</h3>
+            <h3 className="font-semibold text-slate-900 dark:text-white">
+              QR Code Generation
+            </h3>
             <p className="text-sm text-slate-500 dark:text-slate-400 leading-normal">
-              Instantly generate scan-ready, high-resolution QR codes for any short link right from your dashboard.
+              Instantly generate scan-ready, high-resolution QR codes for any
+              short link right from your dashboard.
             </p>
           </div>
 
@@ -99,9 +113,12 @@ function Home() {
             <div className="h-10 w-10 rounded-lg bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 flex items-center justify-center">
               <ShieldCheck size={20} />
             </div>
-            <h3 className="font-semibold text-slate-900 dark:text-white">Secure & Reliable</h3>
+            <h3 className="font-semibold text-slate-900 dark:text-white">
+              Secure & Reliable
+            </h3>
             <p className="text-sm text-slate-500 dark:text-slate-400 leading-normal">
-              Ensure smooth operations with access/refresh token rotation, rate-limiting, and Redis-backed routing.
+              Ensure smooth operations with access/refresh token rotation,
+              rate-limiting, and Redis-backed routing.
             </p>
           </div>
         </section>
@@ -109,7 +126,8 @@ function Home() {
 
       {/* Footer */}
       <footer className="border-t border-slate-200 dark:border-slate-800 py-6 text-center text-xs text-slate-500 dark:text-slate-400">
-        &copy; {new Date().getFullYear()} TinyURL Pro. Created as a production-grade portfolio application.
+        &copy; {new Date().getFullYear()} SnapLink Created as a production-grade
+        portfolio application.
       </footer>
     </div>
   );

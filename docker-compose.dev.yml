@@ -1,7 +1,7 @@
 services:
   mongo:
     image: mongo:6
-    container_name: snaplink-mongo
+    container_name: snaplink-mongo-dev
     restart: unless-stopped
 
     ports:
@@ -23,7 +23,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: snaplink-redis
+    container_name: snaplink-redis-dev
     restart: unless-stopped
 
     ports:
@@ -42,9 +42,9 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
 
-    container_name: snaplink-backend
+    container_name: snaplink-backend-dev
 
     restart: unless-stopped
 
@@ -58,12 +58,17 @@ services:
       - ./backend/.env
 
     environment:
-      NODE_ENV: production
       MONGODB_URI: mongodb://mongo:27017/url-shortener
       REDIS_URL: redis://redis:6379
 
     ports:
       - "5000:5000"
+
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+    command: npm run dev
 
     healthcheck:
       test:
@@ -85,9 +90,9 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
 
-    container_name: snaplink-frontend
+    container_name: snaplink-frontend-dev
 
     restart: unless-stopped
 
@@ -95,8 +100,17 @@ services:
       backend:
         condition: service_healthy
 
+    environment:
+      VITE_API_URL: http://localhost:5000/api/v1
+
     ports:
-      - "5173:80"
+      - "5173:5173"
+
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+    command: npm run dev -- --host 0.0.0.0
 
     networks:
       - snaplink-network
