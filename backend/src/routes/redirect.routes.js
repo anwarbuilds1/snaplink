@@ -7,7 +7,7 @@ import { redirectLimiter } from "../middlewares/rateLimiter.middleware.js";
 const router = Router();
 /**
  * @swagger
- * /{shortCode}:
+ * /r/{shortCode}:
  *   get:
  *     summary: Redirect to original URL
  *     tags:

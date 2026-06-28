@@ -11,6 +11,7 @@ import { Button } from "../../components/common/Button";
 import { Input } from "../../components/common/Input";
 import { Modal } from "../../components/common/Modal";
 import { copyToClipboard } from "../../utils/copyToClipboard";
+import { buildShortUrl, getShortPath } from "../../utils/shortUrl";
 import { ROUTES } from "../../constants/routes";
 import { toast } from "sonner";
 import {
@@ -88,9 +89,7 @@ function Dashboard() {
   };
 
   const handleCopy = async (shortCode: string) => {
-    const base = import.meta.env.VITE_SHORT_BASE_URL ?? "http://localhost:5000";
-    const fullShortUrl = `${base}/r/${shortCode}`;
-    const success = await copyToClipboard(fullShortUrl);
+    const success = await copyToClipboard(buildShortUrl(shortCode));
     if (success) {
       toast.success("Copied to clipboard!");
     } else {
@@ -215,10 +214,7 @@ function Dashboard() {
           ) : (
             <div className="divide-y divide-slate-100 dark:divide-slate-800">
               {recentUrls.map((url) => {
-                const base =
-                  import.meta.env.VITE_SHORT_BASE_URL ??
-                  "http://localhost:5000";
-                const shortUrl = `${base}/r/${url.shortCode}`;
+                const shortUrl = buildShortUrl(url.shortCode);
                 return (
                   <div
                     key={url._id}
@@ -227,7 +223,7 @@ function Dashboard() {
                     <div className="min-w-0 flex-1 space-y-1">
                       <div className="flex items-center gap-2">
                         <span className="font-semibold text-slate-900 dark:text-white text-sm truncate">
-                          /{url.shortCode}
+                          {getShortPath(url.shortCode)}
                         </span>
                         <span className="text-xs px-2 py-0.5 rounded-full bg-slate-105 dark:bg-slate-800 text-slate-500 font-medium">
                           {url.clickCount} clicks
@@ -283,7 +279,7 @@ function Dashboard() {
                     Short Code
                   </span>
                   <p className="text-lg font-bold text-slate-950 dark:text-white">
-                    /{topUrl.shortCode}
+                    {getShortPath(topUrl.shortCode)}
                   </p>
                 </div>
                 <div className="flex flex-col items-end">

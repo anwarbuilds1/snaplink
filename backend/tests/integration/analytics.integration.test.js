@@ -46,8 +46,8 @@ const createUserAndUrl = async () => {
 
   const url = createUrlResponse.body.data;
 
-  // Generate one analytics record
-  await request(app).get(`/${url.shortCode}`);
+  // Generate one analytics record through the public redirect route.
+  await request(app).get(`/r/${url.shortCode}`).redirects(0);
 
   return {
     token,
@@ -66,6 +66,7 @@ describe("GET /api/v1/analytics/:urlId", () => {
     expect(response.status).toBe(200);
     expect(response.body.success).toBe(true);
     expect(response.body.data).toBeDefined();
+    expect(response.body.data.totalClicks).toBe(1);
   });
 
   it("should reject unauthenticated requests", async () => {
@@ -100,6 +101,7 @@ describe("GET /api/v1/analytics/dashboard", () => {
     expect(response.status).toBe(200);
     expect(response.body.success).toBe(true);
     expect(response.body.data).toBeDefined();
+    expect(response.body.data.totalClicks).toBe(1);
   });
 
   it("should reject unauthenticated dashboard requests", async () => {

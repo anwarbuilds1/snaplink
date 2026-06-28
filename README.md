@@ -170,7 +170,7 @@ npm run dev
 
 | Variable              | Description                          | Example                     |
 | --------------------- | ------------------------------------ | --------------------------- |
-| `VITE_API_URL`        | Backend API URL                      | `http://localhost:5000/api` |
+| `VITE_API_URL`        | Backend API URL                      | `http://localhost:5000/api/v1` |
 | `VITE_SHORT_BASE_URL` | Base URL shown in UI for short links | `http://localhost:5000`     |
 
 ---
@@ -373,7 +373,7 @@ backend/
 │   │   ├── auth.routes.js
 │   │   ├── url.routes.js
 │   │   ├── analytics.routes.js
-│   │   └── redirect.routes.js  # /:shortCode, kept separate for performance
+│   │   └── redirect.routes.js  # /r/:shortCode, kept separate for performance
 │   │
 │   ├── middlewares/
 │   │   ├── auth.middleware.js
@@ -577,7 +577,7 @@ frontend/
 
 | Method | Endpoint      | Auth | Description                        |
 | ------ | ------------- | ---- | ---------------------------------- |
-| GET    | `/:shortCode` | —    | Redirect + async analytics capture |
+| GET    | `/r/:shortCode` | —    | Redirect + async analytics capture |
 
 ---
 

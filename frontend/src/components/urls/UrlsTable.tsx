@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import type { UrlData } from "../../types";
 import { ROUTES } from "../../constants/routes";
+import { buildShortUrl, getShortPath } from "../../utils/shortUrl";
 import {
   Copy,
   ExternalLink,
@@ -42,9 +43,7 @@ export const UrlsTable = ({
       </thead>
       <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-sm text-slate-700 dark:text-slate-350">
         {urls.map((url) => {
-          const base =
-            import.meta.env.VITE_SHORT_BASE_URL ?? "http://localhost:5000";
-          const shortUrl = `${base}/r/${url.shortCode}`;
+          const shortUrl = buildShortUrl(url.shortCode);
           const isExpired =
             !url.isActive || (url.expiresAt && new Date(url.expiresAt) <= now);
 
@@ -57,7 +56,7 @@ export const UrlsTable = ({
                 {url.originalUrl}
               </td>
               <td className="px-6 py-4 font-mono font-medium text-slate-650 dark:text-slate-400">
-                /{url.shortCode}
+                {getShortPath(url.shortCode)}
               </td>
               <td className="px-6 py-4 text-center font-bold text-slate-900 dark:text-white">
                 {url.clickCount}

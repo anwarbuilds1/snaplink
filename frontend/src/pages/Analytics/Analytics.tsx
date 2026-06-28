@@ -7,6 +7,7 @@ import { useUrlAnalytics } from "../../hooks/useAnalytics";
 import { StatCard } from "../../components/analytics/StatCard";
 import { MousePointerClick, Globe, Monitor, HelpCircle } from "lucide-react";
 import { SkeletonLoader } from "../../components/common/SkeletonLoader";
+import { getShortPath } from "../../utils/shortUrl";
 
 function Analytics() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -95,7 +96,7 @@ function Analytics() {
           >
             {urls.map((u) => (
               <option key={u._id} value={u._id}>
-                /{u.shortCode} ({u.originalUrl.substring(0, 30)}...)
+                {`${getShortPath(u.shortCode)} (${u.originalUrl.substring(0, 30)}...)`}
               </option>
             ))}
           </select>

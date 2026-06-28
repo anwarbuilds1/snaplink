@@ -109,7 +109,7 @@ export const getUrlById = async (urlId, userId) => {
 export const generateQrCode = async (urlId, userId) => {
   const url = await getUrlById(urlId, userId);
 
-  const shortUrl = `${env.BASE_URL}/${url.shortCode}`;
+  const shortUrl = `${env.BASE_URL.replace(/\/+$/, "")}/r/${url.shortCode}`;
 
   return QRCode.toBuffer(shortUrl);
 };

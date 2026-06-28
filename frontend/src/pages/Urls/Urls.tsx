@@ -10,6 +10,7 @@ import type { UrlData } from "../../types";
 import { Button } from "../../components/common/Button";
 import { Modal } from "../../components/common/Modal";
 import { copyToClipboard } from "../../utils/copyToClipboard";
+import { buildShortUrl } from "../../utils/shortUrl";
 import { toast } from "sonner";
 import { Search, Plus } from "lucide-react";
 
@@ -97,9 +98,7 @@ function Urls() {
   };
 
   const handleCopy = async (shortCode: string) => {
-    const base = import.meta.env.VITE_SHORT_BASE_URL ?? "http://localhost:5000";
-    const fullUrl = `${base}/r/${shortCode}`;
-    const success = await copyToClipboard(fullUrl);
+    const success = await copyToClipboard(buildShortUrl(shortCode));
     if (success) toast.success("Copied short link!");
     else toast.error("Failed to copy link.");
   };

@@ -59,6 +59,7 @@ services:
       NODE_ENV: production
       MONGODB_URI: mongodb://mongo:27017/url-shortener
       REDIS_URL: redis://redis:6379
+      BASE_URL: https://snaplink.anwarbuilds.com
 
     ports:
       - "127.0.0.1:5000:5000"
