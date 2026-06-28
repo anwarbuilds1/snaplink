@@ -710,14 +710,20 @@ docker compose -f docker-compose.yml up -d
 
 Services: `frontend`, `backend`, `mongo`, `redis`, `nginx`
 
-### CI/CD
+### CI/CD and GitHub Container Registry (GHCR)
 
-GitHub Actions pipeline on push to `main`:
+The project uses GitHub Actions workflows for continuous integration, automated building, and continuous deployment of Docker containers to production.
 
-1. Run unit and integration tests
-2. Build Docker images
-3. Push to registry
-4. Deploy to server via SSH
+#### GitHub Container Registry Images
+The build-and-publish workflow builds and pushes production-ready Docker containers to GHCR:
+- **Backend Image**: `ghcr.io/anwarbuilds1/snaplink-backend:latest` (built using the multi-stage backend Dockerfile)
+- **Frontend Image**: `ghcr.io/anwarbuilds1/snaplink-frontend:latest` (compiled with Vite environment variables injected as build arguments)
+
+#### Pipeline Flow
+On any push to the `main` branch:
+1. **Continuous Integration**: Triggers automated test suite execution (unit and integration tests).
+2. **Build and Publish**: Compiles both frontend and backend images, tags them with the git commit SHA and `latest`, and pushes them to GitHub Container Registry.
+3. **Deployment**: Connects to the AWS EC2 instance via SSH, updates local repository files, authenticates with GHCR, pulls the fresh backend and frontend images, runs `docker compose up -d` to perform a zero-downtime rolling update, and validates container health.
 
 ---
 
