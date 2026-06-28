@@ -42,7 +42,7 @@ app.use("/api/v1/metrics", metricsRoutes);
 app.use("/api/v1/urls", urlRoute);
 app.use("/api/v1/analytics", analyticsRoutes);
 app.use("/api/v1/auth", authRoutes);
-app.use("/", redirectRoutes);
+app.use("/r", redirectRoutes);
 
 app.use((req, res) => {
   res.status(404).json({

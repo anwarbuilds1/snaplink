@@ -52,7 +52,7 @@ describe("GET /:shortCode", () => {
 
     const shortCode = createResponse.body.data.shortCode;
 
-    const response = await request(app).get(`/${shortCode}`).redirects(0);
+    const response = await request(app).get(`/r/${shortCode}`).redirects(0);
 
     expect(response.status).toBe(302);
 

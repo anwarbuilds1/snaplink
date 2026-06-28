@@ -27,7 +27,10 @@ import {
 } from "lucide-react";
 
 const quickUrlSchema = z.object({
-  originalUrl: z.string().min(1, "URL is required").url("Please enter a valid URL"),
+  originalUrl: z
+    .string()
+    .min(1, "URL is required")
+    .url("Please enter a valid URL"),
   customAlias: z
     .string()
     .trim()
@@ -36,7 +39,8 @@ const quickUrlSchema = z.object({
       message: "Alias must be between 3 and 30 characters",
     })
     .refine((val) => !val || /^[a-zA-Z0-9_-]+$/.test(val), {
-      message: "Alias must contain only alphanumeric characters, dashes, or underscores",
+      message:
+        "Alias must contain only alphanumeric characters, dashes, or underscores",
     }),
   expiresAt: z.string().optional(),
 });
@@ -68,7 +72,9 @@ function Dashboard() {
       const payload = {
         originalUrl: data.originalUrl,
         customAlias: data.customAlias || undefined,
-        expiresAt: data.expiresAt ? new Date(data.expiresAt).toISOString() : undefined,
+        expiresAt: data.expiresAt
+          ? new Date(data.expiresAt).toISOString()
+          : undefined,
       };
       await createMutation.mutateAsync(payload);
       toast.success("Short URL created successfully!");
@@ -83,7 +89,7 @@ function Dashboard() {
 
   const handleCopy = async (shortCode: string) => {
     const base = import.meta.env.VITE_SHORT_BASE_URL ?? "http://localhost:5000";
-    const fullShortUrl = `${base}/${shortCode}`;
+    const fullShortUrl = `${base}/r/${shortCode}`;
     const success = await copyToClipboard(fullShortUrl);
     if (success) {
       toast.success("Copied to clipboard!");
@@ -99,9 +105,13 @@ function Dashboard() {
   const topUrl = statsData?.data?.topUrl;
 
   const now = new Date();
-  const activeUrlsCount = urls.filter((u) => u.isActive && (!u.expiresAt || new Date(u.expiresAt) > now)).length;
+  const activeUrlsCount = urls.filter(
+    (u) => u.isActive && (!u.expiresAt || new Date(u.expiresAt) > now),
+  ).length;
 
-  const expiredUrlsCount = urls.filter((u) => !u.isActive || (u.expiresAt && new Date(u.expiresAt) <= now)).length;
+  const expiredUrlsCount = urls.filter(
+    (u) => !u.isActive || (u.expiresAt && new Date(u.expiresAt) <= now),
+  ).length;
 
   const qrGeneratedCount = activeUrlsCount;
 
@@ -113,7 +123,9 @@ function Dashboard() {
       {/* Header quick actions */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">Overview</h2>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+            Overview
+          </h2>
           <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
             Real-time highlights of your shortened URLs
           </p>
@@ -133,11 +145,36 @@ function Dashboard() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        <StatCard title="Total URLs" value={totalUrls} icon={Globe} isLoading={isLoading} />
-        <StatCard title="Total Clicks" value={totalClicks} icon={MousePointerClick} isLoading={isLoading} />
-        <StatCard title="Active URLs" value={activeUrlsCount} icon={CheckCircle2} isLoading={isLoading} />
-        <StatCard title="Expired URLs" value={expiredUrlsCount} icon={Clock} isLoading={isLoading} />
-        <StatCard title="QR Generated" value={qrGeneratedCount} icon={QrCode} isLoading={isLoading} />
+        <StatCard
+          title="Total URLs"
+          value={totalUrls}
+          icon={Globe}
+          isLoading={isLoading}
+        />
+        <StatCard
+          title="Total Clicks"
+          value={totalClicks}
+          icon={MousePointerClick}
+          isLoading={isLoading}
+        />
+        <StatCard
+          title="Active URLs"
+          value={activeUrlsCount}
+          icon={CheckCircle2}
+          isLoading={isLoading}
+        />
+        <StatCard
+          title="Expired URLs"
+          value={expiredUrlsCount}
+          icon={Clock}
+          isLoading={isLoading}
+        />
+        <StatCard
+          title="QR Generated"
+          value={qrGeneratedCount}
+          icon={QrCode}
+          isLoading={isLoading}
+        />
       </div>
 
       {/* Middle Grid */}
@@ -146,8 +183,12 @@ function Dashboard() {
         <div className="lg:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xs p-6 space-y-4">
           <div className="flex justify-between items-center">
             <div>
-              <h3 className="font-bold text-slate-900 dark:text-white">Recent URLs</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Your latest shortened links</p>
+              <h3 className="font-bold text-slate-900 dark:text-white">
+                Recent URLs
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Your latest shortened links
+              </p>
             </div>
             <Link
               to={ROUTES.URLS}
@@ -161,7 +202,10 @@ function Dashboard() {
           {isLoading ? (
             <div className="space-y-3">
               {[1, 2, 3].map((n) => (
-                <div key={n} className="h-12 bg-slate-100 dark:bg-slate-800 rounded-lg animate-pulse" />
+                <div
+                  key={n}
+                  className="h-12 bg-slate-100 dark:bg-slate-800 rounded-lg animate-pulse"
+                />
               ))}
             </div>
           ) : recentUrls.length === 0 ? (
@@ -171,10 +215,15 @@ function Dashboard() {
           ) : (
             <div className="divide-y divide-slate-100 dark:divide-slate-800">
               {recentUrls.map((url) => {
-                const base = import.meta.env.VITE_SHORT_BASE_URL ?? "http://localhost:5000";
-                const shortUrl = `${base}/${url.shortCode}`;
+                const base =
+                  import.meta.env.VITE_SHORT_BASE_URL ??
+                  "http://localhost:5000";
+                const shortUrl = `${base}/r/${url.shortCode}`;
                 return (
-                  <div key={url._id} className="py-3.5 flex items-center justify-between gap-4 first:pt-0 last:pb-0">
+                  <div
+                    key={url._id}
+                    className="py-3.5 flex items-center justify-between gap-4 first:pt-0 last:pb-0"
+                  >
                     <div className="min-w-0 flex-1 space-y-1">
                       <div className="flex items-center gap-2">
                         <span className="font-semibold text-slate-900 dark:text-white text-sm truncate">
@@ -217,7 +266,9 @@ function Dashboard() {
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xs p-6 space-y-6 flex flex-col justify-between">
           <div className="space-y-4">
             <div>
-              <h3 className="font-bold text-slate-900 dark:text-white">Top Performing URL</h3>
+              <h3 className="font-bold text-slate-900 dark:text-white">
+                Top Performing URL
+              </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
                 Most clicked link in your account
               </p>
@@ -231,10 +282,14 @@ function Dashboard() {
                   <span className="text-[10px] font-semibold text-brand-700 dark:text-brand-400 uppercase tracking-wide">
                     Short Code
                   </span>
-                  <p className="text-lg font-bold text-slate-950 dark:text-white">/{topUrl.shortCode}</p>
+                  <p className="text-lg font-bold text-slate-950 dark:text-white">
+                    /{topUrl.shortCode}
+                  </p>
                 </div>
                 <div className="flex flex-col items-end">
-                  <span className="text-[10px] text-slate-400 dark:text-slate-500 uppercase">Clicks</span>
+                  <span className="text-[10px] text-slate-400 dark:text-slate-500 uppercase">
+                    Clicks
+                  </span>
                   <div className="flex items-center gap-1 font-bold text-brand-600 dark:text-brand-400 text-lg">
                     <TrendingUp size={16} />
                     {topUrl.clicks}
@@ -249,14 +304,23 @@ function Dashboard() {
           </div>
 
           <div className="pt-4 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500">
-            Tip: Share your short URLs on social media or emails to track traffic stats.
+            Tip: Share your short URLs on social media or emails to track
+            traffic stats.
           </div>
         </div>
       </div>
 
       {/* Quick Shorten Modal */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Quick URL Shortener">
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Quick URL Shortener"
+      >
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-5"
+          noValidate
+        >
           <Input
             id="quick-url-original"
             label="Original URL"

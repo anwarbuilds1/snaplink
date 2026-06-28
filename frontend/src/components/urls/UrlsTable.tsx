@@ -1,7 +1,14 @@
 import { Link } from "react-router-dom";
 import type { UrlData } from "../../types";
 import { ROUTES } from "../../constants/routes";
-import { Copy, ExternalLink, QrCode, Edit3, Trash2, BarChart3 } from "lucide-react";
+import {
+  Copy,
+  ExternalLink,
+  QrCode,
+  Edit3,
+  Trash2,
+  BarChart3,
+} from "lucide-react";
 
 type UrlsTableProps = {
   urls: UrlData[];
@@ -11,7 +18,13 @@ type UrlsTableProps = {
   onDelete: (id: string) => void;
 };
 
-export const UrlsTable = ({ urls, onCopy, onQrCode, onEdit, onDelete }: UrlsTableProps) => {
+export const UrlsTable = ({
+  urls,
+  onCopy,
+  onQrCode,
+  onEdit,
+  onDelete,
+}: UrlsTableProps) => {
   const now = new Date();
 
   return (
@@ -29,12 +42,17 @@ export const UrlsTable = ({ urls, onCopy, onQrCode, onEdit, onDelete }: UrlsTabl
       </thead>
       <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-sm text-slate-700 dark:text-slate-350">
         {urls.map((url) => {
-          const base = import.meta.env.VITE_SHORT_BASE_URL ?? "http://localhost:5000";
-          const shortUrl = `${base}/${url.shortCode}`;
-          const isExpired = !url.isActive || (url.expiresAt && new Date(url.expiresAt) <= now);
+          const base =
+            import.meta.env.VITE_SHORT_BASE_URL ?? "http://localhost:5000";
+          const shortUrl = `${base}/r/${url.shortCode}`;
+          const isExpired =
+            !url.isActive || (url.expiresAt && new Date(url.expiresAt) <= now);
 
           return (
-            <tr key={url._id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
+            <tr
+              key={url._id}
+              className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30"
+            >
               <td className="px-6 py-4 max-w-xs truncate font-medium text-slate-905 dark:text-white">
                 {url.originalUrl}
               </td>
@@ -48,7 +66,9 @@ export const UrlsTable = ({ urls, onCopy, onQrCode, onEdit, onDelete }: UrlsTabl
                 {new Date(url.createdAt).toLocaleDateString()}
               </td>
               <td className="px-6 py-4 text-xs text-slate-400 dark:text-slate-500">
-                {url.expiresAt ? new Date(url.expiresAt).toLocaleDateString() : "Never"}
+                {url.expiresAt
+                  ? new Date(url.expiresAt).toLocaleDateString()
+                  : "Never"}
               </td>
               <td className="px-6 py-4">
                 <span

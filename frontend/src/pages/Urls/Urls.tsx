@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { Layout } from "../../components/layout/Layout";
-import { useMyUrls, useCreateUrl, useUpdateUrl, useDeleteUrl } from "../../hooks/useUrls";
+import {
+  useMyUrls,
+  useCreateUrl,
+  useUpdateUrl,
+  useDeleteUrl,
+} from "../../hooks/useUrls";
 import type { UrlData } from "../../types";
 import { Button } from "../../components/common/Button";
 import { Modal } from "../../components/common/Modal";
@@ -27,7 +32,9 @@ function Urls() {
 
   // Filter/Sort State
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "expired">("all");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "active" | "expired"
+  >("all");
   const [sortBy, setSortBy] = useState<"date" | "clicks" | "name">("date");
 
   // Modal State
@@ -36,19 +43,26 @@ function Urls() {
   const [qrUrlId, setQrUrlId] = useState<string | null>(null);
 
   // Handlers
-  const handleCreateSubmit = async (data: { originalUrl: string; customAlias?: string; expiresAt?: string }) => {
+  const handleCreateSubmit = async (data: {
+    originalUrl: string;
+    customAlias?: string;
+    expiresAt?: string;
+  }) => {
     try {
       const payload = {
         originalUrl: data.originalUrl,
         customAlias: data.customAlias || undefined,
-        expiresAt: data.expiresAt ? new Date(data.expiresAt).toISOString() : undefined,
+        expiresAt: data.expiresAt
+          ? new Date(data.expiresAt).toISOString()
+          : undefined,
       };
       await createMutation.mutateAsync(payload);
       toast.success("Short URL created!");
       setIsCreateOpen(false);
     } catch (err) {
       const error = err as { response?: { data?: { message?: string } } };
-      const errMsg = error.response?.data?.message ?? "Failed to create short URL.";
+      const errMsg =
+        error.response?.data?.message ?? "Failed to create short URL.";
       toast.error(errMsg);
     }
   };
@@ -70,7 +84,8 @@ function Urls() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm("Are you sure you want to delete this shortened URL?")) return;
+    if (!window.confirm("Are you sure you want to delete this shortened URL?"))
+      return;
     try {
       await deleteMutation.mutateAsync(id);
       toast.success("URL deleted successfully!");
@@ -83,7 +98,7 @@ function Urls() {
 
   const handleCopy = async (shortCode: string) => {
     const base = import.meta.env.VITE_SHORT_BASE_URL ?? "http://localhost:5000";
-    const fullUrl = `${base}/${shortCode}`;
+    const fullUrl = `${base}/r/${shortCode}`;
     const success = await copyToClipboard(fullUrl);
     if (success) toast.success("Copied short link!");
     else toast.error("Failed to copy link.");
@@ -99,7 +114,8 @@ function Urls() {
         url.originalUrl.toLowerCase().includes(search.toLowerCase()) ||
         url.shortCode.toLowerCase().includes(search.toLowerCase());
 
-      const isUrlExpired = !url.isActive || (url.expiresAt && new Date(url.expiresAt) <= now);
+      const isUrlExpired =
+        !url.isActive || (url.expiresAt && new Date(url.expiresAt) <= now);
 
       if (statusFilter === "active") return matchesSearch && !isUrlExpired;
       if (statusFilter === "expired") return matchesSearch && isUrlExpired;
@@ -118,10 +134,17 @@ function Urls() {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">All Links</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 font-medium font-semibold">Create and manage your shortened URLs</p>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+            All Links
+          </h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400 font-medium font-semibold">
+            Create and manage your shortened URLs
+          </p>
         </div>
-        <Button onClick={() => setIsCreateOpen(true)} className="flex items-center gap-1.5 self-start sm:self-auto">
+        <Button
+          onClick={() => setIsCreateOpen(true)}
+          className="flex items-center gap-1.5 self-start sm:self-auto"
+        >
           <Plus size={16} />
           Shorten URL
         </Button>
@@ -130,7 +153,10 @@ function Urls() {
       {/* Filter Toolbar */}
       <div className="flex flex-col md:flex-row gap-4 bg-white dark:bg-slate-900 p-4 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xs">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-2.5 text-slate-400" size={16} />
+          <Search
+            className="absolute left-3 top-2.5 text-slate-400"
+            size={16}
+          />
           <input
             type="text"
             placeholder="Search links..."
@@ -142,7 +168,9 @@ function Urls() {
         <div className="flex flex-wrap gap-3">
           <select
             value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as "all" | "active" | "expired")}
+            onChange={(e) =>
+              setStatusFilter(e.target.value as "all" | "active" | "expired")
+            }
             className="px-3 py-2 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-700 dark:text-slate-300 font-medium cursor-pointer"
           >
             <option value="all">All Statuses</option>
@@ -151,7 +179,9 @@ function Urls() {
           </select>
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as "date" | "clicks" | "name")}
+            onChange={(e) =>
+              setSortBy(e.target.value as "date" | "clicks" | "name")
+            }
             className="px-3 py-2 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-700 dark:text-slate-300 font-medium cursor-pointer"
           >
             <option value="date">Sort: Created Date</option>
@@ -169,7 +199,9 @@ function Urls() {
             Loading URLs...
           </div>
         ) : error ? (
-          <div className="p-8 text-center text-red-500">Failed to load URL list.</div>
+          <div className="p-8 text-center text-red-500">
+            Failed to load URL list.
+          </div>
         ) : filteredUrls.length === 0 ? (
           <div className="p-12 text-center text-sm text-slate-500 dark:text-slate-400">
             No shortened URLs match your criteria.
@@ -186,7 +218,11 @@ function Urls() {
       </div>
 
       {/* Pagination Controls */}
-      <Pagination currentPage={page} totalPages={pagination.totalPages} onPageChange={setPage} />
+      <Pagination
+        currentPage={page}
+        totalPages={pagination.totalPages}
+        onPageChange={setPage}
+      />
 
       {/* Create Modal */}
       <CreateUrlModal
@@ -206,7 +242,11 @@ function Urls() {
       />
 
       {/* QR Code Modal */}
-      <Modal isOpen={!!qrUrlId} onClose={() => setQrUrlId(null)} title="QR Code Options">
+      <Modal
+        isOpen={!!qrUrlId}
+        onClose={() => setQrUrlId(null)}
+        title="QR Code Options"
+      >
         {qrUrlId && <QrCodeModalContent urlId={qrUrlId} />}
       </Modal>
     </Layout>
