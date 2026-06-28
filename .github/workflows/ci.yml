@@ -1,0 +1,76 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - "**"
+
+  pull_request:
+
+jobs:
+  backend:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create test environment
+        run: |
+          cat <<EOF > .env
+          NODE_ENV=test
+          PORT=5000
+          JWT_SECRET=test-secret
+          JWT_REFRESH_SECRET=test-refresh-secret
+          JWT_EXPIRES_IN=15m
+          JWT_REFRESH_EXPIRES_IN=7d
+          MONGODB_URI=mongodb://localhost:27017/test
+          REDIS_URL=redis://localhost:6379
+          BASE_URL=http://localhost:5000
+          EOF
+
+      - name: Run Tests
+        run: npm test
+
+  frontend:
+    name: Frontend Build
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create frontend environment
+        run: |
+          cat <<EOF > .env
+          VITE_API_URL=https://snaplink.anwarbuilds.com/api/v1
+          VITE_SHORT_BASE_URL=https://snaplink.anwarbuilds.com
+          EOF
+
+      - name: Build
+        run: npm run build
