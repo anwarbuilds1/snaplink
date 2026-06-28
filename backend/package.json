@@ -1,5 +1,5 @@
 {
-  "name": "short-url-backend",
+   "name": "snaplink-backend",
   "version": "1.0.0",
   "description": "Backend API for the URL shortener application.",
   "main": "src/server.js",
