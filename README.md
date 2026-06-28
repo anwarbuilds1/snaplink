@@ -1,5 +1,18 @@
 # SnapLink
 
+## User Flow Sequence
+
+```mermaid
+graph TD
+    Register[Register Account] --> Login[Login Session]
+    Login --> Create[Create Short URL]
+    Create --> Copy[Copy Short URL]
+    Copy --> Open[Open Short URL]
+    Open --> Analytics[Analytics Dashboard Updated]
+```
+
+*(For a live interactive walkthrough recording, see [flow.gif](docs/screenshots/flow.gif))*
+
 [![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 
 [![Express.js](https://img.shields.io/badge/Express.js-5.x-000000?logo=express&logoColor=white)](https://expressjs.com)
@@ -16,7 +29,36 @@
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-A **production-oriented** URL shortening platform built with modern backend engineering practices. Create short links, manage URLs, track detailed analytics, and monitor performance through a clean dashboard.
+## Live Demo
+
+| Service | URL |
+|----------|-----|
+| Live Application | https://snaplink.anwarbuilds.com |
+| API Documentation | https://snaplink.anwarbuilds.com/api-docs |
+
+> **Production deployment:** AWS EC2 • Docker • Nginx • Let's Encrypt • GitHub Actions CI/CD
+
+## Screenshots
+
+### Landing Page
+
+![Landing](docs/screenshots/landing.png)
+
+### Dashboard
+
+![Dashboard](docs/screenshots/dashboard.png)
+
+### URL Management
+
+![URLs](docs/screenshots/urls.png)
+
+### Analytics
+
+![Analytics](docs/screenshots/analytics.png)
+
+### API Documentation
+
+![Swagger](docs/screenshots/swagger.png)
 
 ---
 
@@ -51,22 +93,47 @@ A **production-oriented** URL shortening platform built with modern backend engi
 - Vite
 - React Query
 
+## Production Stack
+
+- AWS EC2 (Ubuntu)
+- Docker & Docker Compose
+- Nginx Reverse Proxy
+- Let's Encrypt SSL
+- MongoDB
+- Redis
+- GitHub Actions CI/CD
+- GitHub Container Registry (GHCR)
+
 ---
 
-## Production Features
+## Features by Category
 
-- JWT Authentication
-- Refresh Token Rotation
-- RBAC
-- Redis Caching
-- Prometheus Metrics
-- Health Checks
-- Readiness Checks
-- Graceful Shutdown
-- Docker
-- GitHub Actions
-- Unit Tests
-- Integration Tests
+### Authentication
+- [x] JWT Authentication
+- [x] Refresh Tokens
+- [x] RBAC (Role-Based Access Control)
+- [x] Password Hashing (bcrypt)
+
+### URL Management
+- [x] Short URLs
+- [x] Custom Aliases
+- [x] Expiration Dates
+- [x] QR Codes
+
+### Analytics
+- [x] Browser Tracking
+- [x] Device Tracking
+- [x] OS Tracking
+- [x] Country Tracking
+- [x] Referrer Tracking
+
+### DevOps
+- [x] Dockerization (Dockerfile & docker-compose)
+- [x] GitHub Actions CI/CD
+- [x] AWS Deployment
+- [x] HTTPS via Let's Encrypt
+- [x] Container Health Checks
+- [x] Prometheus Metrics
 
 ---
 
@@ -168,10 +235,10 @@ npm run dev
 
 ### Frontend (`frontend/.env`)
 
-| Variable              | Description                          | Example                     |
-| --------------------- | ------------------------------------ | --------------------------- |
+| Variable              | Description                          | Example                        |
+| --------------------- | ------------------------------------ | ------------------------------ |
 | `VITE_API_URL`        | Backend API URL                      | `http://localhost:5000/api/v1` |
-| `VITE_SHORT_BASE_URL` | Base URL shown in UI for short links | `http://localhost:5000`     |
+| `VITE_SHORT_BASE_URL` | Base URL shown in UI for short links | `http://localhost:5000`        |
 
 ---
 
@@ -502,7 +569,7 @@ frontend/
   "password": "string (bcrypt hash)",
   "createdAt": "Date",
   "updatedAt": "Date",
-  "refreshTokenHash": "string (hash)" 
+  "refreshTokenHash": "string (hash)"
 }
 ```
 
@@ -545,38 +612,41 @@ frontend/
 
 ## API Reference
 
+Interactive API documentation:
+[https://snaplink.anwarbuilds.com/api-docs](https://snaplink.anwarbuilds.com/api-docs)
+
 ### Authentication
 
-| Method | Endpoint | Auth | Description |
-| ------ | -------- | ---- | ----------- |
-| POST | `/api/v1/auth/register` | — | Register a new user account |
-| POST | `/api/v1/auth/login` | — | Login and receive access & refresh tokens |
-| POST | `/api/v1/auth/refresh` | — | Generate a new access token using a refresh token |
-| POST | `/api/v1/auth/logout` | ✓ | Logout the authenticated user |
-| GET | `/api/v1/auth/profile` | ✓ | Retrieve the current user's profile |
-| GET | `/api/v1/auth/urls` | ✓ | Retrieve the authenticated user's URLs |
+| Method | Endpoint                | Auth | Description                                       |
+| ------ | ----------------------- | ---- | ------------------------------------------------- |
+| POST   | `/api/v1/auth/register` | —    | Register a new user account                       |
+| POST   | `/api/v1/auth/login`    | —    | Login and receive access & refresh tokens         |
+| POST   | `/api/v1/auth/refresh`  | —    | Generate a new access token using a refresh token |
+| POST   | `/api/v1/auth/logout`   | ✓    | Logout the authenticated user                     |
+| GET    | `/api/v1/auth/profile`  | ✓    | Retrieve the current user's profile               |
+| GET    | `/api/v1/auth/urls`     | ✓    | Retrieve the authenticated user's URLs            |
 
 ### URL Management
 
-| Method | Endpoint | Auth | Description |
-| ------ | -------- | ---- | ----------- |
-| POST | `/api/v1/urls` | ✓ | Create a new short URL |
-| GET | `/api/v1/urls/:id` | ✓ | Retrieve a URL by ID |
-| PATCH | `/api/v1/urls/:id` | ✓ | Update an existing URL |
-| DELETE | `/api/v1/urls/:id` | ✓ | Delete a URL |
-| GET | `/api/v1/urls/:id/qr` | ✓ | Generate a QR code for a short URL |
+| Method | Endpoint              | Auth | Description                        |
+| ------ | --------------------- | ---- | ---------------------------------- |
+| POST   | `/api/v1/urls`        | ✓    | Create a new short URL             |
+| GET    | `/api/v1/urls/:id`    | ✓    | Retrieve a URL by ID               |
+| PATCH  | `/api/v1/urls/:id`    | ✓    | Update an existing URL             |
+| DELETE | `/api/v1/urls/:id`    | ✓    | Delete a URL                       |
+| GET    | `/api/v1/urls/:id/qr` | ✓    | Generate a QR code for a short URL |
 
 ### Analytics
 
-| Method | Endpoint | Auth | Description |
-| ------ | -------- | ---- | ----------- |
-| GET | `/api/v1/analytics/dashboard` | ✓ | Retrieve aggregated dashboard statistics |
-| GET | `/api/v1/analytics/:urlId` | ✓ | Retrieve analytics for a specific URL |
+| Method | Endpoint                      | Auth | Description                              |
+| ------ | ----------------------------- | ---- | ---------------------------------------- |
+| GET    | `/api/v1/analytics/dashboard` | ✓    | Retrieve aggregated dashboard statistics |
+| GET    | `/api/v1/analytics/:urlId`    | ✓    | Retrieve analytics for a specific URL    |
 
 ### Redirect
 
-| Method | Endpoint      | Auth | Description                        |
-| ------ | ------------- | ---- | ---------------------------------- |
+| Method | Endpoint        | Auth | Description                        |
+| ------ | --------------- | ---- | ---------------------------------- |
 | GET    | `/r/:shortCode` | —    | Redirect + async analytics capture |
 
 ---
@@ -599,32 +669,42 @@ SET url:abc123 "https://example.com" EX 86400
 
 ## Security
 
-| Layer | Implementation |
-|-------|----------------|
-| Authentication | JWT Access & Refresh Tokens |
-| Session Security | Refresh Token Rotation with Hashed Token Storage |
-| Authorization | Protected Routes via Authentication Middleware |
-| Password Storage | bcrypt (12 Salt Rounds) |
-| Input Validation | Zod Schema Validation |
-| Rate Limiting | express-rate-limit (100 requests / 15 min per IP) |
-| HTTP Security | Helmet Security Headers |
-| CORS | Configurable Allowlisted Origins |
-| Request Tracking | Correlation IDs for Request Tracing |
+| Layer                  | Implementation                                        |
+| ---------------------- | ----------------------------------------------------- |
+| Authentication         | JWT Access & Refresh Tokens                           |
+| Session Security       | Refresh Token Rotation with Hashed Token Storage      |
+| Authorization          | Protected Routes via Authentication Middleware        |
+| Password Storage       | bcrypt (12 Salt Rounds)                               |
+| Input Validation       | Zod Schema Validation                                 |
+| Rate Limiting          | express-rate-limit (100 requests / 15 min per IP)     |
+| HTTP Security          | Helmet Security Headers                               |
+| CORS                   | Configurable Allowlisted Origins                      |
+| Request Tracking       | Correlation IDs for Request Tracing                   |
 | Environment Validation | Startup Validation for Required Environment Variables |
 
 ---
 
-## Deployment
-
-### Production Architecture
+## Production Deployment
 
 ```mermaid
 flowchart TD
-  A[Client] --> B[Nginx - SSL Termination + Static Files]
-  B --> C[React Build - served by Nginx]
-  B --> D[Express API - port 5000]
-  D --> E[(Redis)]
-  D --> F[(MongoDB)]
+
+Browser --> Nginx
+
+Nginx --> React
+Nginx --> Express
+
+Express --> Redis
+Express --> MongoDB
+
+GitHub --> GitHubActions
+
+GitHubActions --> AWS
+
+AWS --> DockerCompose
+
+DockerCompose --> React
+DockerCompose --> Express
 ```
 
 ### Docker Compose
@@ -710,6 +790,20 @@ Detailed architecture documentation is available in:
 - `docs/authentication-flow.md`
 - `docs/caching-strategy.md`
 - `docs/database-design.md`
+
+## Project Statistics
+
+| Metric | Value |
+|---------|-------|
+| Backend | Node.js + Express |
+| Frontend | React + TypeScript |
+| Database | MongoDB |
+| Cache | Redis |
+| Deployment | AWS EC2 |
+| Reverse Proxy | Nginx |
+| CI/CD | GitHub Actions |
+| Containerization | Docker |
+| API Documentation | Swagger |
 
 ## License
 
