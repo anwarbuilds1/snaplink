@@ -33,8 +33,6 @@ graph TD
     Open --> Analytics[Analytics Dashboard Updated]
 ```
 
-*(For a live interactive walkthrough recording, see [flow.gif](docs/screenshots/flow.gif))*
-
 ## Screenshots
 
 ### Landing Page
