@@ -106,7 +106,6 @@ graph TD
 ### Authentication
 - [x] JWT Authentication
 - [x] Refresh Tokens
-- [x] RBAC (Role-Based Access Control)
 - [x] Password Hashing (bcrypt)
 
 ### URL Management
