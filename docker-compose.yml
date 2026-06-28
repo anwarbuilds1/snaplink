@@ -1,12 +1,12 @@
 services:
   mongo:
     image: mongo:6
-    container_name: short-url-mongo
+    container_name: snaplink-mongo
     restart: unless-stopped
     ports:
       - "27017:27017"
     volumes:
-      - mongo-data:/data/db
+      - snaplink-data:/data/db
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 10s
@@ -16,7 +16,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: short-url-redis
+    container_name: snaplink-redis
     restart: unless-stopped
     ports:
       - "6379:6379"
@@ -30,7 +30,7 @@ services:
   backend:
     build:
       context: ./backend
-    container_name: short-url-backend
+    container_name: snaplink-backend
     restart: unless-stopped
     depends_on:
       mongo:
@@ -53,4 +53,4 @@ services:
       start_period: 20s
 
 volumes:
-  mongo-data:
+  snaplink-data:
