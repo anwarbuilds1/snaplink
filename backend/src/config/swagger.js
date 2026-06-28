@@ -4,9 +4,9 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "Short URL API",
+      title: "SnapLink API",
       version: "1.0.0",
-      description: "URL Shortener Backend API",
+      description: "REST API for the SnapLink URL Management Platform.",
     },
     servers: [
       {
