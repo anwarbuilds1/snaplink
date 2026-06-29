@@ -62,6 +62,9 @@ graph TD
 - **JWT Authentication** with Access + Refresh Tokens
 - **Redis-backed** URL caching for lightning-fast redirects
 - **Advanced Analytics** with aggregation
+- **NoSQL Injection Protection** via payload sanitization and explicit query objects
+- **Cloudflare Turnstile CAPTCHA** integration on Login & Register
+- **Grafana & Prometheus** monitoring for the complete stack
 - Fully **Dockerized** local development
 - **CI/CD** with GitHub Actions
 - **Swagger API Documentation**
@@ -107,6 +110,7 @@ graph TD
 - [x] JWT Authentication
 - [x] Refresh Tokens
 - [x] Password Hashing (bcrypt)
+- [x] Cloudflare Turnstile CAPTCHA (Login & Register)
 
 ### URL Management
 - [x] Short URLs
@@ -128,6 +132,7 @@ graph TD
 - [x] HTTPS via Let's Encrypt
 - [x] Container Health Checks
 - [x] Prometheus Metrics
+- [x] Grafana Dashboards (System, API, DB, Cache, Nginx)
 
 ---
 
@@ -226,6 +231,7 @@ npm run dev
 | `JWT_EXPIRES_IN`     | JWT expiry duration             | `15m`                                     |
 | `BASE_URL`           | Public base URL for short links | `http://localhost:5000`                   |
 | `NODE_ENV`           | Environment                     | `development`                             |
+| `CLOUDFLARE_TURNSTILE_SECRET_KEY` | Cloudflare Turnstile Secret Key (dev bypass) | `1x0000000000000000000000000000000AA` |
 
 ### Frontend (`frontend/.env`)
 
@@ -233,6 +239,7 @@ npm run dev
 | --------------------- | ------------------------------------ | ------------------------------ |
 | `VITE_API_URL`        | Backend API URL                      | `http://localhost:5000/api/v1` |
 | `VITE_SHORT_BASE_URL` | Base URL shown in UI for short links | `http://localhost:5000`        |
+| `VITE_CLOUDFLARE_TURNSTILE_SITE_KEY` | Cloudflare Turnstile Site Key (dev bypass) | `1x00000000000000000000AA`     |
 
 ---
 
@@ -263,6 +270,9 @@ npm run dev
 | Geo Analytics      | Track country and city via IP geolocation           |
 | Docker Support     | Full containerized setup via Docker Compose         |
 | CI/CD Pipeline     | Automated testing and deployment via GitHub Actions |
+| NoSQL Injection Protection | Protection via `express-mongo-sanitize` & explicit query objects |
+| CAPTCHA Bot Protection | Cloudflare Turnstile integration on Login & Register pages |
+| Full Stack Monitoring | Prometheus metrics and Grafana dashboards         |
 
 ---
 
@@ -675,6 +685,8 @@ SET url:abc123 "https://example.com" EX 86400
 | CORS                   | Configurable Allowlisted Origins                      |
 | Request Tracking       | Correlation IDs for Request Tracing                   |
 | Environment Validation | Startup Validation for Required Environment Variables |
+| NoSQL Injection Protection | Input sanitization using `express-mongo-sanitize`, strict payload verification, and enforcing explicit query objects in repositories |
+| Bot Protection (CAPTCHA) | Cloudflare Turnstile integration on Login & Register flows, verified on the backend with automated tests for validation and bypass scenarios |
 
 ---
 
@@ -737,21 +749,29 @@ On any push to the `main` branch:
 
 ---
 
-## Observability
+## Observability & Monitoring
 
-✔ Prometheus
+The application includes a comprehensive observability and monitoring stack:
 
-✔ Health
+- **Prometheus**: Scrapes application metrics via `/api/v1/metrics`, Redis metrics via `redis-exporter`, Nginx metrics via `nginx-exporter`, and container-level metrics via `cAdvisor`.
+- **Grafana**: Dockerized Grafana service with pre-provisioned data sources and dashboards, accessible at `/grafana/` in production.
+- **Pre-configured Dashboards**:
+  - **CPU & Memory**: Container resource monitoring via `cAdvisor` (Docker container monitor).
+  - **Node.js**: App-level metrics (garbage collection, memory usage, event loop lag).
+  - **API Metrics**: HTTP request rate, request duration (P95), and HTTP status codes.
+  - **Redis**: Cache hit/miss ratio, memory utilization, connected clients.
+  - **MongoDB**: DB active connections, command metrics.
+  - **Nginx**: Client request rate, active connections.
+  - **Docker**: Container status and health metrics.
 
-✔ Readiness
-
-✔ Structured Logging
-
-✔ Request IDs
-
-✔ Graceful Shutdown
-
-✔ Metrics Endpoint
+### Observability Features
+✔ Prometheus integration  
+✔ Pre-configured Grafana Dashboards  
+✔ Health & Readiness Endpoints  
+✔ Structured JSON Logging  
+✔ Request/Correlation IDs  
+✔ Graceful Shutdown handling  
+✔ Custom API Metrics  
 
 ---
 
@@ -771,6 +791,9 @@ On any push to the `main` branch:
 - [x] GitHub Actions CI
 - [x] Swagger Documentation
 - [x] Unit & Integration Tests
+- [x] NoSQL Injection Protection (via `express-mongo-sanitize` & explicit query objects)
+- [x] Cloudflare Turnstile CAPTCHA Integration (Login & Register pages)
+- [x] Grafana Dashboard (CPU, Memory, Node, Redis, MongoDB, Nginx, Docker, API metrics)
 
 ### Future
 
