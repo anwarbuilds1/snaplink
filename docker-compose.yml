@@ -134,9 +134,67 @@ services:
     networks:
       - snaplink-network
 
+  grafana:
+    image: grafana/grafana:10.4.1
+    container_name: snaplink-grafana
+    restart: unless-stopped
+    volumes:
+      - snaplink-grafana-data:/var/lib/grafana
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - snaplink-network
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    container_name: snaplink-cadvisor
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    expose:
+      - "8080"
+    networks:
+      - snaplink-network
+
+  redis-exporter:
+    image: oliver006/redis_exporter:v1.58.0
+    container_name: snaplink-redis-exporter
+    restart: unless-stopped
+    environment:
+      - REDIS_ADDR=redis://redis:6379
+    expose:
+      - "9121"
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - snaplink-network
+
+  mongodb-exporter:
+    image: percona/mongodb_exporter:0.40
+    container_name: snaplink-mongodb-exporter
+    restart: unless-stopped
+    command:
+      - --mongodb.uri=mongodb://mongo:27017/url-shortener
+    expose:
+      - "9216"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - snaplink-network
+
 volumes:
   snaplink-mongo-data:
   snaplink-prometheus-data:
+  snaplink-grafana-data:
 
 networks:
   snaplink-network:
