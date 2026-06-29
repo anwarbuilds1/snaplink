@@ -98,76 +98,58 @@ describe("NoSQL Injection Protection", () => {
       global.fetch = originalFetch;
     });
 
-    it("should fail registration if captchaToken is missing in production/dev (not test env simulation)", async () => {
-      const originalNodeEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = "production";
+    it("should fail registration if captchaToken is missing when CAPTCHA is enforced", async () => {
+      const response = await request(app)
+        .post("/api/v1/auth/register")
+        .set("x-test-bypass-captcha", "false")
+        .send({
+          name: "Captcha Fail User",
+          email: "captcha-fail@test.com",
+          password: "password123",
+        });
 
-      try {
-        const response = await request(app)
-          .post("/api/v1/auth/register")
-          .send({
-            name: "Captcha Fail User",
-            email: "captcha-fail@test.com",
-            password: "password123",
-          });
-
-        expect(response.status).toBe(400);
-        expect(response.body.success).toBe(false);
-        expect(response.body.message).toContain("CAPTCHA token is required");
-      } finally {
-        process.env.NODE_ENV = originalNodeEnv;
-      }
+      expect(response.status).toBe(400);
+      expect(response.body.success).toBe(false);
+      expect(response.body.message).toContain("CAPTCHA token is required");
     });
 
     it("should fail validation if Turnstile API returns success: false", async () => {
-      const originalNodeEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = "production";
-
       global.fetch = vi.fn().mockResolvedValue({
         json: async () => ({ success: false, "error-codes": ["invalid-input-response"] }),
       });
 
-      try {
-        const response = await request(app)
-          .post("/api/v1/auth/register")
-          .send({
-            name: "Captcha Invalid User",
-            email: "captcha-invalid@test.com",
-            password: "password123",
-            captchaToken: "invalid-token",
-          });
+      const response = await request(app)
+        .post("/api/v1/auth/register")
+        .set("x-test-bypass-captcha", "false")
+        .send({
+          name: "Captcha Invalid User",
+          email: "captcha-invalid@test.com",
+          password: "password123",
+          captchaToken: "invalid-token",
+        });
 
-        expect(response.status).toBe(400);
-        expect(response.body.success).toBe(false);
-        expect(response.body.message).toContain("CAPTCHA verification failed");
-      } finally {
-        process.env.NODE_ENV = originalNodeEnv;
-      }
+      expect(response.status).toBe(400);
+      expect(response.body.success).toBe(false);
+      expect(response.body.message).toContain("CAPTCHA verification failed");
     });
 
     it("should pass validation if Turnstile API returns success: true", async () => {
-      const originalNodeEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = "production";
-
       global.fetch = vi.fn().mockResolvedValue({
         json: async () => ({ success: true }),
       });
 
-      try {
-        const response = await request(app)
-          .post("/api/v1/auth/register")
-          .send({
-            name: "Captcha Valid User",
-            email: "captcha-success@test.com",
-            password: "password123",
-            captchaToken: "valid-token",
-          });
+      const response = await request(app)
+        .post("/api/v1/auth/register")
+        .set("x-test-bypass-captcha", "false")
+        .send({
+          name: "Captcha Valid User",
+          email: "captcha-success@test.com",
+          password: "password123",
+          captchaToken: "valid-token",
+        });
 
-        expect(response.status).toBe(201);
-        expect(response.body.success).toBe(true);
-      } finally {
-        process.env.NODE_ENV = originalNodeEnv;
-      }
+      expect(response.status).toBe(201);
+      expect(response.body.success).toBe(true);
     });
   });
 });

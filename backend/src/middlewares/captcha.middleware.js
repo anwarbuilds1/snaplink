@@ -6,8 +6,9 @@ export const verifyTurnstile = async (req, res, next) => {
     return next();
   }
 
-  // To keep existing integration tests green, skip validation if it is test env and no token was sent
-  if (process.env.NODE_ENV === "test" && !req.body.captchaToken) {
+  // To keep existing integration tests green, skip validation if it is test env,
+  // no token was sent, and bypass is not explicitly disabled by x-test-bypass-captcha header.
+  if (process.env.NODE_ENV === "test" && !req.body.captchaToken && req.headers["x-test-bypass-captcha"] !== "false") {
     return next();
   }
 
