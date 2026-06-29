@@ -27,7 +27,7 @@ const envSchema = z.object({
     .default("development"),
 
   CLOUDFLARE_TURNSTILE_SECRET_KEY: isTest
-    ? z.string().optional()
+    ? z.string().optional().default("1x0000000000000000000000000000000AA")
     : z.string().min(1).default("1x0000000000000000000000000000000AA"),
 });
 

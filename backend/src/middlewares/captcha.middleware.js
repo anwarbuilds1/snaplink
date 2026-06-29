@@ -1,5 +1,7 @@
+import { env } from "../config/env.js";
+
 export const verifyTurnstile = async (req, res, next) => {
-  const secretKey = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY;
+  const secretKey = env.CLOUDFLARE_TURNSTILE_SECRET_KEY;
 
   // Skip validation if secret key is not set
   if (!secretKey) {
