@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
+import mongoSanitize from "express-mongo-sanitize";
 
 import requestId from "./middlewares/requestId.middleware.js";
 import healthRoutes from "./routes/health.routes.js";
@@ -20,6 +21,26 @@ import metricsRoutes from "./routes/metrics.routes.js";
 const app = express();
 
 app.use(express.json());
+app.use((req, _res, next) => {
+  if (req.query) {
+    Object.defineProperty(req, "query", {
+      value: { ...req.query },
+      writable: true,
+      configurable: true,
+      enumerable: true,
+    });
+  }
+  if (req.params) {
+    Object.defineProperty(req, "params", {
+      value: { ...req.params },
+      writable: true,
+      configurable: true,
+      enumerable: true,
+    });
+  }
+  next();
+});
+app.use(mongoSanitize());
 app.use(cors());
 app.use(helmet());
 app.use(requestId);
