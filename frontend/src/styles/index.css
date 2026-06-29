@@ -5,17 +5,18 @@
 @theme {
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
   
-  --color-brand-50: #eff6ff;
-  --color-brand-100: #dbeafe;
-  --color-brand-200: #bfdbfe;
-  --color-brand-300: #93c5fd;
-  --color-brand-400: #60a5fa;
-  --color-brand-500: #3b82f6;
-  --color-brand-600: #2563eb;
-  --color-brand-700: #1d4ed8;
-  --color-brand-800: #1e40af;
-  --color-brand-900: #1e3a8a;
-  --color-brand-950: #172554;
+  /* Modern Violet-Indigo Brand Colors */
+  --color-brand-50: #f5f3ff;
+  --color-brand-100: #ede9fe;
+  --color-brand-200: #ddd6fe;
+  --color-brand-300: #c4b5fd;
+  --color-brand-400: #a78bfa;
+  --color-brand-500: #8b5cf6;
+  --color-brand-600: #7c3aed;
+  --color-brand-700: #6d28d9;
+  --color-brand-800: #5b21b6;
+  --color-brand-900: #4c1d95;
+  --color-brand-950: #2e1065;
 }
 
 @layer base {
@@ -28,5 +29,106 @@
 
 /* Smooth transitions for theme toggle */
 .theme-transition {
-  transition: background-color 0.2s ease, border-color 0.2s ease, text-color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Glassmorphism Styles */
+.glass-card {
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.dark .glass-card {
+  background-color: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(30, 41, 59, 0.7);
+}
+
+.glass-input {
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.dark .glass-input {
+  background-color: rgba(2, 6, 23, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(30, 41, 59, 0.8);
+}
+
+/* Glowing Neon Borders & Accents */
+.glow-primary {
+  box-shadow: 0 0 25px -5px rgba(124, 58, 237, 0.15), 0 0 15px -5px rgba(124, 58, 237, 0.1);
+}
+
+.glow-card-hover:hover {
+  border-color: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 10px 30px -10px rgba(139, 92, 246, 0.12), 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+.dark .glow-card-hover:hover {
+  border-color: rgba(139, 92, 246, 0.3);
+  box-shadow: 0 10px 40px -15px rgba(139, 92, 246, 0.25);
+}
+
+/* Premium Gradient Background Blur Blobs */
+.bg-ambient-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-ambient-glow::before {
+  content: "";
+  position: absolute;
+  top: -15%;
+  left: 20%;
+  width: 45%;
+  height: 45%;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, rgba(99, 102, 241, 0.04) 50%, transparent 100%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(80px);
+}
+
+.bg-ambient-glow::after {
+  content: "";
+  position: absolute;
+  bottom: 10%;
+  right: 15%;
+  width: 35%;
+  height: 35%;
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.08) 0%, rgba(124, 58, 237, 0.03) 55%, transparent 100%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(60px);
+}
+
+/* Scrollbar customizations */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.2);
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(75, 85, 99, 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.4);
 }

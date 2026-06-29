@@ -12,7 +12,7 @@ export const Layout = ({ title, children }: LayoutProps) => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
+    <div className="flex h-screen overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 bg-ambient-glow">
       {/* Desktop Sidebar */}
       <div className="hidden md:block h-full">
         <Sidebar />

@@ -4,12 +4,17 @@ import { useDashboardStats } from "../../hooks/useAnalytics";
 import { User, Mail, Calendar, Globe, MousePointerClick } from "lucide-react";
 import { StatCard } from "../../components/analytics/StatCard";
 
+type RegisterStats = {
+  totalUrls: number;
+  totalClicks: number;
+};
+
 function Profile() {
   const { user } = useAuth();
   const { data: statsData, isLoading: isStatsLoading } = useDashboardStats();
 
-  const totalUrls = statsData?.data?.totalUrls ?? 0;
-  const totalClicks = statsData?.data?.totalClicks ?? 0;
+  const totalUrls = (statsData?.data as RegisterStats)?.totalUrls ?? 0;
+  const totalClicks = (statsData?.data as RegisterStats)?.totalClicks ?? 0;
 
   const getInitials = (name?: string) => {
     if (!name) return "U";
@@ -32,9 +37,9 @@ function Profile() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* User Card */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-xs space-y-6">
+        <div className="glass-card border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-6 shadow-lg space-y-6 animate-in slide-in-from-bottom-2 duration-200">
           <div className="flex flex-col items-center text-center space-y-4">
-            <div className="h-20 w-20 rounded-full bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-400 flex items-center justify-center text-2xl font-bold border-2 border-brand-200 dark:border-brand-900 select-none">
+            <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-500 text-white flex items-center justify-center text-2xl font-bold shadow-md shadow-violet-500/20 border-0 select-none">
               {getInitials(user?.name)}
             </div>
             <div>
@@ -43,17 +48,17 @@ function Profile() {
             </div>
           </div>
 
-          <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800 text-sm">
-            <div className="flex items-center gap-3 text-slate-650 dark:text-slate-300">
-              <User size={16} className="text-slate-400" />
+          <div className="space-y-4 pt-4 border-t border-slate-150 dark:border-slate-850/60 text-xs font-semibold">
+            <div className="flex items-center gap-3 text-slate-650 dark:text-slate-350">
+              <User size={16} className="text-slate-400 shrink-0" />
               <span>{user?.name}</span>
             </div>
-            <div className="flex items-center gap-3 text-slate-650 dark:text-slate-300 font-medium">
-              <Mail size={16} className="text-slate-400" />
+            <div className="flex items-center gap-3 text-slate-650 dark:text-slate-350">
+              <Mail size={16} className="text-slate-400 shrink-0" />
               <span className="truncate">{user?.email}</span>
             </div>
-            <div className="flex items-center gap-3 text-slate-650 dark:text-slate-300">
-              <Calendar size={16} className="text-slate-400" />
+            <div className="flex items-center gap-3 text-slate-650 dark:text-slate-350">
+              <Calendar size={16} className="text-slate-400 shrink-0" />
               <span>Joined: {new Date().toLocaleDateString()}</span>
             </div>
           </div>
@@ -61,7 +66,7 @@ function Profile() {
 
         {/* Activity summary */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-xs space-y-4">
+          <div className="glass-card border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-6 shadow-lg space-y-4">
             <h3 className="font-bold text-slate-900 dark:text-white">Account Overview</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <StatCard title="URLs Shortened" value={totalUrls} icon={Globe} isLoading={isStatsLoading} />
@@ -69,7 +74,7 @@ function Profile() {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-xs">
+          <div className="glass-card border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-6 shadow-lg">
             <h3 className="font-bold text-slate-900 dark:text-white mb-2">Developer Settings</h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
               This application interacts with the backend using OAuth-based Bearer credentials. To modify API keys or

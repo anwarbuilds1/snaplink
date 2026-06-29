@@ -22,66 +22,66 @@ export const Header = ({ title, onOpenMobileSidebar }: HeaderProps) => {
   };
 
   return (
-    <header className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-6 flex items-center justify-between">
+    <header className="h-16 border-b border-slate-200/80 dark:border-slate-850/80 bg-white/70 dark:bg-slate-900/60 backdrop-blur-md px-6 flex items-center justify-between z-20">
       <div className="flex items-center gap-4">
         {onOpenMobileSidebar && (
           <button
             onClick={onOpenMobileSidebar}
-            className="md:hidden text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+            className="md:hidden text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60 cursor-pointer"
           >
             <Menu size={20} />
           </button>
         )}
-        <h1 className="text-base font-semibold text-slate-900 dark:text-white">{title}</h1>
+        <h1 className="text-sm font-bold tracking-tight text-slate-950 dark:text-white uppercase">{title}</h1>
       </div>
 
       <div className="flex items-center gap-4">
         {/* Theme switcher */}
-        <div className="flex items-center border border-slate-200 dark:border-slate-800 rounded-lg p-0.5 bg-slate-50 dark:bg-slate-950">
+        <div className="flex items-center border border-slate-200/80 dark:border-slate-800/80 rounded-xl p-0.5 bg-slate-50 dark:bg-slate-950/40 backdrop-blur-xs">
           <button
             onClick={() => setTheme("light")}
             title="Light mode"
-            className={`p-1.5 rounded-md transition-colors cursor-pointer ${
+            className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
               theme === "light"
-                ? "bg-white dark:bg-slate-800 text-brand-600 dark:text-brand-400 shadow-xs"
-                : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                ? "bg-white dark:bg-slate-800 text-violet-650 dark:text-violet-400 shadow-xs"
+                : "text-slate-400 hover:text-slate-650 dark:hover:text-slate-300"
             }`}
           >
-            <Sun size={15} />
+            <Sun size={14} />
           </button>
           <button
             onClick={() => setTheme("dark")}
             title="Dark mode"
-            className={`p-1.5 rounded-md transition-colors cursor-pointer ${
+            className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
               theme === "dark"
-                ? "bg-white dark:bg-slate-800 text-brand-600 dark:text-brand-400 shadow-xs"
-                : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                ? "bg-white dark:bg-slate-800 text-violet-650 dark:text-violet-400 shadow-xs"
+                : "text-slate-400 hover:text-slate-650 dark:hover:text-slate-300"
             }`}
           >
-            <Moon size={15} />
+            <Moon size={14} />
           </button>
           <button
             onClick={() => setTheme("system")}
             title="System mode"
-            className={`p-1.5 rounded-md transition-colors cursor-pointer ${
+            className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
               theme === "system"
-                ? "bg-white dark:bg-slate-800 text-brand-600 dark:text-brand-400 shadow-xs"
-                : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                ? "bg-white dark:bg-slate-800 text-violet-650 dark:text-violet-400 shadow-xs"
+                : "text-slate-400 hover:text-slate-650 dark:hover:text-slate-300"
             }`}
           >
-            <Monitor size={15} />
+            <Monitor size={14} />
           </button>
         </div>
 
         {/* User Profile */}
         {user && (
-          <div className="flex items-center gap-2.5 pl-2 border-l border-slate-200 dark:border-slate-800">
-            <div className="h-8 w-8 rounded-full bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-400 flex items-center justify-center text-xs font-bold ring-1 ring-brand-200 dark:ring-brand-900 select-none">
+          <div className="flex items-center gap-2.5 pl-3 border-l border-slate-200 dark:border-slate-800/80">
+            <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-500 text-white flex items-center justify-center text-xs font-bold shadow-xs select-none">
               {getInitials(user?.name)}
             </div>
             <div className="hidden sm:flex flex-col text-left">
-              <span className="text-xs font-semibold text-slate-900 dark:text-white leading-none">{user.name}</span>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 leading-none mt-1">{user.email}</span>
+              <span className="text-xs font-bold text-slate-900 dark:text-white leading-none">{user.name}</span>
+              <span className="text-[10px] text-slate-500 dark:text-slate-450 leading-none mt-1.5 font-medium">{user.email}</span>
             </div>
           </div>
         )}

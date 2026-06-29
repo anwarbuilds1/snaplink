@@ -136,7 +136,7 @@ function Urls() {
           <h2 className="text-xl font-bold text-slate-900 dark:text-white">
             All Links
           </h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 font-medium font-semibold">
+          <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
             Create and manage your shortened URLs
           </p>
         </div>
@@ -150,10 +150,10 @@ function Urls() {
       </div>
 
       {/* Filter Toolbar */}
-      <div className="flex flex-col md:flex-row gap-4 bg-white dark:bg-slate-900 p-4 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xs">
+      <div className="flex flex-col md:flex-row gap-4 glass-card p-4 rounded-2xl shadow-md border border-slate-200/80 dark:border-slate-800/80">
         <div className="relative flex-1">
           <Search
-            className="absolute left-3 top-2.5 text-slate-400"
+            className="absolute left-3.5 top-[11px] text-slate-400"
             size={16}
           />
           <input
@@ -161,7 +161,7 @@ function Urls() {
             placeholder="Search links..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+            className="w-full pl-10 pr-4 py-2.5 text-xs bg-white/50 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-850/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 text-slate-900 dark:text-slate-100 placeholder-slate-450 dark:placeholder-slate-500 transition-all font-semibold"
           />
         </div>
         <div className="flex flex-wrap gap-3">
@@ -170,7 +170,7 @@ function Urls() {
             onChange={(e) =>
               setStatusFilter(e.target.value as "all" | "active" | "expired")
             }
-            className="px-3 py-2 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-700 dark:text-slate-300 font-medium cursor-pointer"
+            className="px-3.5 py-2.5 text-xs bg-white/50 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-850/85 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 text-slate-700 dark:text-slate-200 font-bold cursor-pointer transition-all"
           >
             <option value="all">All Statuses</option>
             <option value="active">Active Only</option>
@@ -181,7 +181,7 @@ function Urls() {
             onChange={(e) =>
               setSortBy(e.target.value as "date" | "clicks" | "name")
             }
-            className="px-3 py-2 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-700 dark:text-slate-300 font-medium cursor-pointer"
+            className="px-3.5 py-2.5 text-xs bg-white/50 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-850/85 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 text-slate-700 dark:text-slate-200 font-bold cursor-pointer transition-all"
           >
             <option value="date">Sort: Created Date</option>
             <option value="clicks">Sort: Total Clicks</option>
@@ -190,19 +190,19 @@ function Urls() {
         </div>
       </div>
 
-      {/* Main Table */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xs overflow-x-auto">
+      {/* Main Table Container */}
+      <div className="glass-card border border-slate-200/80 dark:border-slate-800/80 rounded-2xl shadow-lg overflow-x-auto">
         {isLoading ? (
-          <div className="p-8 text-center text-slate-500 dark:text-slate-400">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-brand-600 mx-auto mb-3"></div>
-            Loading URLs...
+          <div className="p-12 text-center text-slate-500 dark:text-slate-400">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-violet-650 mx-auto mb-3"></div>
+            <p className="text-xs font-semibold">Loading URLs...</p>
           </div>
         ) : error ? (
-          <div className="p-8 text-center text-red-500">
+          <div className="p-12 text-center text-red-500 text-xs font-bold">
             Failed to load URL list.
           </div>
         ) : filteredUrls.length === 0 ? (
-          <div className="p-12 text-center text-sm text-slate-500 dark:text-slate-400">
+          <div className="p-16 text-center text-xs text-slate-500 dark:text-slate-400 font-bold">
             No shortened URLs match your criteria.
           </div>
         ) : (

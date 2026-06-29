@@ -53,15 +53,15 @@ function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-4 transition-colors duration-200">
-      <div className="w-full max-w-md space-y-8 bg-white dark:bg-slate-900 p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-4 transition-colors duration-200 bg-ambient-glow">
+      <div className="w-full max-w-md space-y-8 glass-card p-8 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 shadow-2xl relative z-10 animate-fade-in">
         {/* Brand logo & header */}
-        <div className="text-center space-y-2">
-          <div className="inline-flex bg-brand-600 text-white p-2 rounded-xl items-center justify-center">
+        <div className="text-center space-y-3">
+          <div className="inline-flex bg-gradient-to-br from-violet-600 to-indigo-600 text-white p-2.5 rounded-2xl items-center justify-center shadow-lg shadow-violet-500/20">
             <Link2 size={24} />
           </div>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Create an account</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400">Sign up to start shortening and analyzing links</p>
+          <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">Create an account</h2>
+          <p className="text-xs text-slate-505 dark:text-slate-400 font-medium">Sign up to start shortening and analyzing links</p>
         </div>
 
         {/* Register form */}
@@ -100,7 +100,7 @@ function Register() {
               type="button"
               id="toggle-register-password"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-[32px] text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+              className="absolute right-3.5 top-[34px] text-slate-400 hover:text-slate-650 dark:hover:text-slate-200 cursor-pointer"
             >
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
@@ -118,9 +118,9 @@ function Register() {
         </form>
 
         {/* Footer links */}
-        <div className="text-center text-sm text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-6">
+        <div className="text-center text-xs text-slate-505 dark:text-slate-400 border-t border-slate-150 dark:border-slate-850/60 pt-6 font-medium">
           Already have an account?{" "}
-          <Link to={ROUTES.LOGIN} className="font-semibold text-brand-600 hover:text-brand-700 transition-colors">
+          <Link to={ROUTES.LOGIN} className="font-bold text-violet-600 dark:text-violet-400 hover:underline transition-all">
             Sign in instead
           </Link>
         </div>
