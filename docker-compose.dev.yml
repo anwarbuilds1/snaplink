@@ -116,8 +116,29 @@ services:
     networks:
       - snaplink-network
 
+  prometheus:
+    image: prom/prometheus:v2.51.0
+    container_name: snaplink-prometheus-dev
+    restart: unless-stopped
+    volumes:
+      - ./docker/prometheus/prometheus.dev.yml:/etc/prometheus/prometheus.yml
+      - snaplink-prometheus-data-dev:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --web.console.libraries=/usr/share/prometheus/console_libraries
+      - --web.console.templates=/usr/share/prometheus/consoles
+    ports:
+      - "9090:9090"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - snaplink-network
+
 volumes:
   snaplink-mongo-data:
+  snaplink-prometheus-data-dev:
 
 networks:
   snaplink-network:
