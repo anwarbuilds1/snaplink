@@ -46,6 +46,7 @@ jobs:
           build-args: |
             VITE_API_URL=https://snaplink.anwarbuilds.com/api/v1
             VITE_SHORT_BASE_URL=https://snaplink.anwarbuilds.com
+            VITE_CLOUDFLARE_TURNSTILE_SITE_KEY=${{ secrets.VITE_CLOUDFLARE_TURNSTILE_SITE_KEY || '0x4AAAAAADsySiKz_73-qLeY' }}
           tags: |
             ghcr.io/anwarbuilds1/snaplink-frontend:latest
             ghcr.io/anwarbuilds1/snaplink-frontend:${{ github.sha }}
