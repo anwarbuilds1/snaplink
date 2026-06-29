@@ -9,11 +9,14 @@ import { Input } from "../../components/common/Input";
 import { Button } from "../../components/common/Button";
 import { Link2, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
+import { useTheme } from "../../context/ThemeContext";
+import { Turnstile } from "../../components/common/Turnstile";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().min(1, "Email is required").email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  captchaToken: z.string().min(1, "Please complete the CAPTCHA"),
 });
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
@@ -21,12 +24,15 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 function Register() {
   const { register: signup } = useAuth();
   const navigate = useNavigate();
+  const { resolvedTheme } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
   const [isPending, setIsPending] = useState(false);
 
   const {
     register,
     handleSubmit,
+    setValue,
+    trigger,
     formState: { errors },
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -34,6 +40,7 @@ function Register() {
       name: "",
       email: "",
       password: "",
+      captchaToken: "",
     },
   });
 
@@ -104,6 +111,29 @@ function Register() {
             >
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
+          </div>
+
+          <div className="space-y-1">
+            <Turnstile
+              siteKey={import.meta.env.VITE_CLOUDFLARE_TURNSTILE_SITE_KEY}
+              theme={resolvedTheme}
+              onSuccess={(token) => {
+                setValue("captchaToken", token, { shouldValidate: true });
+              }}
+              onError={() => {
+                setValue("captchaToken", "");
+                trigger("captchaToken");
+              }}
+              onExpire={() => {
+                setValue("captchaToken", "");
+                trigger("captchaToken");
+              }}
+            />
+            {errors.captchaToken?.message && (
+              <p className="text-xs text-rose-500 font-medium text-center">
+                {errors.captchaToken.message}
+              </p>
+            )}
           </div>
 
           <Button

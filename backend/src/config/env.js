@@ -25,6 +25,10 @@ const envSchema = z.object({
   NODE_ENV: z
     .enum(["development", "test", "production"])
     .default("development"),
+
+  CLOUDFLARE_TURNSTILE_SECRET_KEY: isTest
+    ? z.string().optional().default("1x0000000000000000000000000000000AA")
+    : z.string().min(1).default("1x0000000000000000000000000000000AA"),
 });
 
 const parsed = envSchema.safeParse(process.env);

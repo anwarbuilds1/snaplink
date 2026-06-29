@@ -18,6 +18,7 @@ import {
   loginLimiter,
   registerLimiter,
 } from "../middlewares/rateLimiter.middleware.js";
+import { verifyTurnstile } from "../middlewares/captcha.middleware.js";
 
 const router = Router();
 /**
@@ -48,7 +49,7 @@ const router = Router();
  *       201:
  *         description: User registered successfully
  */
-router.post("/register", registerLimiter, validate(registerSchema), register);
+router.post("/register", registerLimiter, validate(registerSchema), verifyTurnstile, register);
 /**
  * @swagger
  * /api/v1/auth/login:
@@ -74,7 +75,7 @@ router.post("/register", registerLimiter, validate(registerSchema), register);
  *       200:
  *         description: Login successful
  */
-router.post("/login", loginLimiter, validate(loginSchema), login);
+router.post("/login", loginLimiter, validate(loginSchema), verifyTurnstile, login);
 /**
  * @swagger
  * /api/v1/auth/refresh:
